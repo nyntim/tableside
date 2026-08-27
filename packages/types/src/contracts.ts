@@ -10,7 +10,7 @@ import {
   selectOrderStatusEventSchema,
   updateBusinessSettingsSchema,
 } from '@odyssey/db';
-import { FULFILLMENT_TYPES, ORDER_ACTIONS, ORDER_STATUSES } from './order-state-machine.js';
+import { FULFILLMENT_TYPES, ORDER_ACTIONS, ORDER_STATUSES } from './order-state-machine';
 
 export const errorResponseSchema = z.object({
   error: z.object({

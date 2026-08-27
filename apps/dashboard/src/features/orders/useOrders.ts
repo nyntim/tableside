@@ -15,7 +15,7 @@ import type {
   PostOrders201,
   PostOrdersBody,
 } from '@odyssey/api-client';
-import { getActionLabel } from '@odyssey/types';
+import { getActionLabel } from '@odyssey/shared';
 import { useToast } from '@odyssey/ui';
 import { unwrapResponse } from '@/lib/api';
 

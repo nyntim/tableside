@@ -15,7 +15,7 @@ import {
   useTheme,
 } from '@odyssey/ui';
 import { formatDateTime } from '@odyssey/shared';
-import { getFulfillmentLabel } from '@odyssey/types';
+import { getFulfillmentLabel } from '@odyssey/shared';
 import { useOrderDetail, useOrderRouteParams } from '@/features/orders/useOrders';
 
 export default function OrderDetailScreen() {

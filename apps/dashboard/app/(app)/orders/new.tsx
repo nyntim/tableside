@@ -17,7 +17,7 @@ import {
   useGetMenuItems,
   useGetSettings,
 } from '@odyssey/api-client';
-import { calculateOrderTotals } from '@odyssey/types';
+import { calculateOrderTotals } from '@odyssey/shared';
 import { useCreateOrder } from '@/features/orders/useOrders';
 import { unwrapResponse } from '@/lib/api';
 import type { GetCustomers200, GetMenuItems200Item, GetSettings200 } from '@odyssey/api-client';

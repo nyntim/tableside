@@ -13,8 +13,7 @@
     "test": "echo 'no ui tests yet'"
   },
   "dependencies": {
-    "@odyssey/shared": "workspace:*",
-    "@odyssey/types": "workspace:*"
+    "@odyssey/shared": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",

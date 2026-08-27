@@ -1,3 +1,3 @@
-export * from './contracts.js';
-export * from './order-state-machine.js';
-export * from './business-logic.js';
+export * from './contracts';
+export * from './order-state-machine';
+export * from './business-logic';

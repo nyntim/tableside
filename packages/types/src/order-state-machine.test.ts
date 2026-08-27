@@ -4,7 +4,7 @@ import {
   getAllowedActions,
   getNextStatus,
   getStatusLabel,
-} from './order-state-machine.js';
+} from './order-state-machine';
 
 describe('order state machine', () => {
   it('allows confirm from pending', () => {
