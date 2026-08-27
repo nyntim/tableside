@@ -1,4 +1,4 @@
-import type { Database } from '@odyssey/db';
+import type { Database } from '@tableside/db';
 
 export type AppBindings = {
   HYPERDRIVE: { connectionString: string };

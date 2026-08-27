@@ -11,7 +11,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import { useCustomersList, type CustomerListItem } from '@/features/crm/useCustomers';
 
 export default function CrmScreen() {

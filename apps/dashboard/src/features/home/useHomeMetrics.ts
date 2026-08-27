@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
-import { useGetMetricsSummary } from '@odyssey/api-client';
-import type { GetMetricsSummary200, GetMetricsSummaryRange } from '@odyssey/api-client';
+import { useGetMetricsSummary } from '@tableside/api-client';
+import type { GetMetricsSummary200, GetMetricsSummaryRange } from '@tableside/api-client';
 import { unwrapResponse } from '@/lib/api';
 
 export function useHomeMetrics() {

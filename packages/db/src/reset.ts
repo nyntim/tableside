@@ -1,7 +1,7 @@
 import postgres from 'postgres';
 
 const connectionString =
-  process.env.DATABASE_URL ?? 'postgres://odyssey:odyssey@localhost:5432/odyssey_ops';
+  process.env.DATABASE_URL ?? 'postgres://tableside:tableside@localhost:5432/tableside';
 
 async function main() {
   const sql = postgres(connectionString, { max: 1 });

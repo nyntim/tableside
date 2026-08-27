@@ -11,16 +11,16 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import {
   useGetCustomers,
   useGetMenuItems,
   useGetSettings,
-} from '@odyssey/api-client';
-import { calculateOrderTotals } from '@odyssey/shared';
+} from '@tableside/api-client';
+import { calculateOrderTotals } from '@tableside/shared';
 import { useCreateOrder } from '@/features/orders/useOrders';
 import { unwrapResponse } from '@/lib/api';
-import type { GetCustomers200, GetMenuItems200Item, GetSettings200 } from '@odyssey/api-client';
+import type { GetCustomers200, GetMenuItems200Item, GetSettings200 } from '@tableside/api-client';
 
 export default function NewOrderScreen() {
   const { colors } = useTheme();

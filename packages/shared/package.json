@@ -1,5 +1,5 @@
 {
-  "name": "@odyssey/shared",
+  "name": "@tableside/shared",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "test": "echo 'no shared tests yet'"
   },
   "devDependencies": {
-    "@odyssey/tsconfig": "workspace:*",
+    "@tableside/tsconfig": "workspace:*",
     "typescript": "^5.8.3",
     "vitest": "^4.1.11"
   }

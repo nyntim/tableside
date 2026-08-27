@@ -20,7 +20,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 
 export default function UiLibraryScreen() {
   const router = useRouter();
@@ -36,7 +36,7 @@ export default function UiLibraryScreen() {
       </View>
 
       <Text style={[typography.sm, { color: colors.textMuted }]}>
-        Design system primitives from @odyssey/ui — theme mode: {mode}
+        Design system primitives from @tableside/ui — theme mode: {mode}
       </Text>
       <Button label="Toggle theme" variant="secondary" onPress={toggleMode} />
 

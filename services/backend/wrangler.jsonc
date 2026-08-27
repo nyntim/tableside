@@ -1,5 +1,5 @@
 {
-  "name": "odyssey-backend",
+  "name": "tableside-backend",
   "main": "src/index.ts",
   "compatibility_date": "2026-08-04",
   "compatibility_flags": ["nodejs_compat"],
@@ -7,7 +7,7 @@
     {
       "binding": "HYPERDRIVE",
       "id": "00000000-0000-0000-0000-000000000001",
-      "localConnectionString": "postgres://odyssey:odyssey@localhost:5432/odyssey_ops"
+      "localConnectionString": "postgres://tableside:tableside@localhost:5432/tableside"
     }
   ]
 }

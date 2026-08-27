@@ -4,9 +4,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: odyssey
-      POSTGRES_PASSWORD: odyssey
-      POSTGRES_DB: odyssey_ops
+      POSTGRES_USER: tableside
+      POSTGRES_PASSWORD: tableside
+      POSTGRES_DB: tableside
     volumes:
       - postgres-data:/var/lib/postgresql/data
 

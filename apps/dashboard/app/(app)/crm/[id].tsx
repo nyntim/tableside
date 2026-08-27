@@ -11,7 +11,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import { useCustomerDetail } from '@/features/crm/useCustomers';
 
 export default function CustomerDetailScreen() {

@@ -1,5 +1,5 @@
 {
-  "name": "@odyssey/db",
+  "name": "@tableside/db",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -25,7 +25,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@odyssey/tsconfig": "workspace:*",
+    "@tableside/tsconfig": "workspace:*",
     "@types/node": "^22.15.29",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.19.4",

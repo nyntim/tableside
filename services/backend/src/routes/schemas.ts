@@ -22,7 +22,7 @@ import {
   updateMenuCategoryBodySchema,
   updateMenuItemBodySchema,
   updateSettingsBodySchema,
-} from '@odyssey/types';
+} from '@tableside/types';
 
 const errorResponses = {
   400: {

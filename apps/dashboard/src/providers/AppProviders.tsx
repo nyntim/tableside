@@ -1,6 +1,6 @@
 import React from 'react';
 import { QueryProvider } from './QueryProvider';
-import { ThemeProvider, ToastProvider } from '@odyssey/ui';
+import { ThemeProvider, ToastProvider } from '@tableside/ui';
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (

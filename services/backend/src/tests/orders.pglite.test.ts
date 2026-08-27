@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { businessSettings } from '@odyssey/db';
+import { businessSettings } from '@tableside/db';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { createApp } from '../app.js';
 import { createTestDb } from './pglite-setup.js';
@@ -46,7 +46,7 @@ describe('openapi artifact', () => {
     const committed = JSON.parse(
       readFileSync(join(process.cwd(), 'openapi/openapi.json'), 'utf8'),
     );
-    expect(committed.info.title).toBe('Odyssey Ops API');
+    expect(committed.info.title).toBe('Tableside API');
     expect(Object.keys(committed.paths).length).toBeGreaterThan(5);
   });
 });

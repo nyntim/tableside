@@ -3,9 +3,9 @@ import {
   orderItems,
   orders,
   orderStatusEvents,
-} from '@odyssey/db';
-import type { Database } from '@odyssey/db';
-import { generateOrderNumber } from '@odyssey/shared';
+} from '@tableside/db';
+import type { Database } from '@tableside/db';
+import { generateOrderNumber } from '@tableside/shared';
 import {
   actionRequiresReason,
   calculateOrderTotals,
@@ -14,7 +14,7 @@ import {
   getStatusTimestampField,
   isStoreOpen,
   type OrderAction,
-} from '@odyssey/types';
+} from '@tableside/types';
 import { and, count, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm';
 import {
   invalidTransitionError,

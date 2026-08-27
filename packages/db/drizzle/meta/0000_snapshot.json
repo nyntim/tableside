@@ -20,7 +20,7 @@
           "type": "varchar(160)",
           "primaryKey": false,
           "notNull": true,
-          "default": "'Odyssey Kitchen'"
+          "default": "'Tableside Kitchen'"
         },
         "timezone": {
           "name": "timezone",

@@ -1,5 +1,5 @@
 {
-  "name": "@odyssey/api-client",
+  "name": "@tableside/api-client",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.0.0",
-    "@odyssey/tsconfig": "workspace:*",
+    "@tableside/tsconfig": "workspace:*",
     "msw": "^2.10.2",
     "orval": "^8.26.0",
     "typescript": "^5.8.3"

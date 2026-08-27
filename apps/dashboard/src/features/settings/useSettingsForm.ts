@@ -1,6 +1,6 @@
-import { useGetSettings, usePatchSettings } from '@odyssey/api-client';
-import type { GetSettings200, PatchSettingsBody } from '@odyssey/api-client';
-import { useToast } from '@odyssey/ui';
+import { useGetSettings, usePatchSettings } from '@tableside/api-client';
+import type { GetSettings200, PatchSettingsBody } from '@tableside/api-client';
+import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useSettingsForm() {

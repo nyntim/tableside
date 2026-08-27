@@ -1,5 +1,5 @@
 {
-  "name": "@odyssey/backend",
+  "name": "@tableside/backend",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@hono/zod-openapi": "^1.6.1",
-    "@odyssey/db": "workspace:*",
-    "@odyssey/shared": "workspace:*",
-    "@odyssey/types": "workspace:*",
+    "@tableside/db": "workspace:*",
+    "@tableside/shared": "workspace:*",
+    "@tableside/types": "workspace:*",
     "@scalar/hono-api-reference": "^0.11.16",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.13.5",
@@ -25,7 +25,7 @@
     "@cloudflare/vitest-pool-workers": "^0.22.0",
     "@cloudflare/workers-types": "^4.20250827.0",
     "@electric-sql/pglite": "^0.5.8",
-    "@odyssey/tsconfig": "workspace:*",
+    "@tableside/tsconfig": "workspace:*",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "vitest": "^4.1.11",

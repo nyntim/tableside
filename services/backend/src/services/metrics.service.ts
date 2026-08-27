@@ -1,6 +1,6 @@
-import { menuItems, orderItems, orders } from '@odyssey/db';
-import type { Database } from '@odyssey/db';
-import { ORDER_STATUSES } from '@odyssey/types';
+import { menuItems, orderItems, orders } from '@tableside/db';
+import type { Database } from '@tableside/db';
+import { ORDER_STATUSES } from '@tableside/types';
 import { and, count, desc, eq, gte, sql, sum } from 'drizzle-orm';
 
 function getRangeStart(range: 'today' | '7d' | '30d') {

@@ -1,5 +1,5 @@
-import { businessSettings } from '@odyssey/db';
-import type { Database } from '@odyssey/db';
+import { businessSettings } from '@tableside/db';
+import type { Database } from '@tableside/db';
 import { eq } from 'drizzle-orm';
 import { notFound } from '../lib/errors.js';
 

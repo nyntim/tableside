@@ -1,5 +1,5 @@
 {
-  "name": "@odyssey/dashboard",
+  "name": "@tableside/dashboard",
   "version": "0.0.0",
   "private": true,
   "main": "expo-router/entry",
@@ -14,10 +14,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@odyssey/api-client": "workspace:*",
-    "@odyssey/shared": "workspace:*",
-    "@odyssey/types": "workspace:*",
-    "@odyssey/ui": "workspace:*",
+    "@tableside/api-client": "workspace:*",
+    "@tableside/shared": "workspace:*",
+    "@tableside/types": "workspace:*",
+    "@tableside/ui": "workspace:*",
     "@tanstack/react-query": "^5.102.6",
     "expo": "~57.0.17",
     "expo-constants": "~57.0.15",
@@ -32,7 +32,7 @@
     "react-native-web": "~0.21.0"
   },
   "devDependencies": {
-    "@odyssey/tsconfig": "workspace:*",
+    "@tableside/tsconfig": "workspace:*",
     "@testing-library/react-native": "^13.2.0",
     "@types/jest": "^29.5.14",
     "@types/react": "~19.1.0",

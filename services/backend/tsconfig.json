@@ -1,5 +1,5 @@
 {
-  "extends": "@odyssey/tsconfig/base.json",
+  "extends": "@tableside/tsconfig/base.json",
   "compilerOptions": {
     "noEmit": true,
     "noUnusedLocals": false,

@@ -1,4 +1,4 @@
-import type { OpeningHoursDay } from '@odyssey/db';
+import type { OpeningHoursDay } from '@tableside/db';
 
 export function isStoreOpen(
   openingHours: OpeningHoursDay[],

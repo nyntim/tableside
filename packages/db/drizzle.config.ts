@@ -5,6 +5,6 @@ export default defineConfig({
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_URL ?? 'postgres://odyssey:odyssey@localhost:5432/odyssey_ops',
+    url: process.env.DATABASE_URL ?? 'postgres://tableside:tableside@localhost:5432/tableside',
   },
 });

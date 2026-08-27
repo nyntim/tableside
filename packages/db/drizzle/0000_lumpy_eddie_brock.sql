@@ -3,7 +3,7 @@ CREATE TYPE "public"."order_action" AS ENUM('confirm', 'reject', 'start_prep', '
 CREATE TYPE "public"."order_status" AS ENUM('pending', 'confirmed', 'preparing', 'ready', 'out_for_delivery', 'completed', 'cancelled', 'rejected');--> statement-breakpoint
 CREATE TABLE "business_settings" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"restaurant_name" varchar(160) DEFAULT 'Odyssey Kitchen' NOT NULL,
+	"restaurant_name" varchar(160) DEFAULT 'Tableside Kitchen' NOT NULL,
 	"timezone" varchar(64) DEFAULT 'America/New_York' NOT NULL,
 	"prep_time_minutes" integer DEFAULT 20 NOT NULL,
 	"auto_accept_orders" boolean DEFAULT false NOT NULL,

@@ -8,9 +8,9 @@ import {
   usePatchMenuItemsId,
   usePostMenuCategories,
   usePostMenuItems,
-} from '@odyssey/api-client';
-import type { GetMenuCategories200Item, GetMenuItems200Item } from '@odyssey/api-client';
-import { useToast } from '@odyssey/ui';
+} from '@tableside/api-client';
+import type { GetMenuCategories200Item, GetMenuItems200Item } from '@tableside/api-client';
+import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useMenuManagement() {

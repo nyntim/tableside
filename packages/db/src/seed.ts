@@ -34,7 +34,7 @@ function calculateOrderTotals(input: {
 }
 
 const connectionString =
-  process.env.DATABASE_URL ?? 'postgres://odyssey:odyssey@localhost:5432/odyssey_ops';
+  process.env.DATABASE_URL ?? 'postgres://tableside:tableside@localhost:5432/tableside';
 
 const categorySeed = [
   { name: 'Starters', description: 'Light bites to begin', sortOrder: 1 },
@@ -105,7 +105,7 @@ async function main() {
   }
 
   await db.insert(businessSettings).values({
-    restaurantName: 'Odyssey Kitchen',
+    restaurantName: 'Tableside Kitchen',
     timezone: 'America/New_York',
     prepTimeMinutes: 25,
     autoAcceptOrders: false,

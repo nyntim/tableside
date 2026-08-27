@@ -13,8 +13,8 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
-import { formatRelativeDate } from '@odyssey/shared';
+} from '@tableside/ui';
+import { formatRelativeDate } from '@tableside/shared';
 import { useOrdersList, type OrderListItem } from '@/features/orders/useOrders';
 
 const STATUS_OPTIONS = [

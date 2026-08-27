@@ -26,16 +26,16 @@ importers:
 
   apps/dashboard:
     dependencies:
-      '@odyssey/api-client':
+      '@tableside/api-client':
         specifier: workspace:*
         version: link:../../packages/api-client
-      '@odyssey/shared':
+      '@tableside/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@odyssey/types':
+      '@tableside/types':
         specifier: workspace:*
         version: link:../../packages/types
-      '@odyssey/ui':
+      '@tableside/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       '@tanstack/react-query':
@@ -75,7 +75,7 @@ importers:
         specifier: ~0.21.0
         version: 0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@testing-library/react-native':
@@ -115,7 +115,7 @@ importers:
       '@faker-js/faker':
         specifier: ^10.0.0
         version: 10.6.0
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       msw:
@@ -146,7 +146,7 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/node':
@@ -164,7 +164,7 @@ importers:
 
   packages/shared:
     devDependencies:
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -178,14 +178,14 @@ importers:
 
   packages/types:
     dependencies:
-      '@odyssey/db':
+      '@tableside/db':
         specifier: workspace:*
         version: link:../db
       zod:
         specifier: ^4.4.3
         version: 4.4.3
     devDependencies:
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       typescript:
@@ -197,12 +197,9 @@ importers:
 
   packages/ui:
     dependencies:
-      '@odyssey/shared':
+      '@tableside/shared':
         specifier: workspace:*
         version: link:../shared
-      '@odyssey/types':
-        specifier: workspace:*
-        version: link:../types
       react:
         specifier: '>=18'
         version: 19.1.0
@@ -213,7 +210,7 @@ importers:
         specifier: '>=0.19'
         version: 0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
     devDependencies:
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/react':
@@ -228,18 +225,18 @@ importers:
       '@hono/zod-openapi':
         specifier: ^1.6.1
         version: 1.6.1(hono@4.13.5)(zod@4.4.3)
-      '@odyssey/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@odyssey/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
-      '@odyssey/types':
-        specifier: workspace:*
-        version: link:../../packages/types
       '@scalar/hono-api-reference':
         specifier: ^0.11.16
         version: 0.11.16(hono@4.13.5)
+      '@tableside/db':
+        specifier: workspace:*
+        version: link:../../packages/db
+      '@tableside/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+      '@tableside/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260702.1)(@electric-sql/pglite@0.5.8)(postgres@3.4.9)
@@ -262,7 +259,7 @@ importers:
       '@electric-sql/pglite':
         specifier: ^0.5.8
         version: 0.5.8
-      '@odyssey/tsconfig':
+      '@tableside/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       tsx:

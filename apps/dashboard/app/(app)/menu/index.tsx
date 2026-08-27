@@ -12,7 +12,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import { useMenuManagement } from '@/features/menu/useMenuManagement';
 
 export default function MenuScreen() {

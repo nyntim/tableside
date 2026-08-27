@@ -1,5 +1,5 @@
 {
-  "extends": "@odyssey/tsconfig/react-native.json",
+  "extends": "@tableside/tsconfig/react-native.json",
   "compilerOptions": {
     "noEmit": true,
     "noUnusedLocals": false,

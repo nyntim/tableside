@@ -49,9 +49,9 @@ export function createApp(options?: { getDb?: GetDb }) {
   app.doc('/openapi.json', {
     openapi: '3.0.0',
     info: {
-      title: 'Odyssey Ops API',
+      title: 'Tableside API',
       version: '1.0.0',
-      description: 'Restaurant operations API for Odyssey assignment',
+      description: 'Restaurant operations API for Tableside',
     },
     servers: [{ url: 'http://127.0.0.1:8799', description: 'Local development' }],
   });

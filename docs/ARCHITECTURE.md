@@ -19,7 +19,7 @@ apps/dashboard (Expo pages)
 - **Runtime**: Cloudflare Workers via Wrangler; local dev uses Hyperdrive binding with `localConnectionString` pointed at Postgres.
 - **App factory**: `createApp({ getDb })` accepts a DB factory for test injection (PGlite in Vitest, Postgres in production).
 - **Error model**: `AppError` maps domain failures to structured `{ error: { code, message, details? } }` JSON.
-- **Routes**: Grouped by domain (menu, customers, orders, settings, metrics). Each route uses Zod schemas from `@odyssey/types`.
+- **Routes**: Grouped by domain (menu, customers, orders, settings, metrics). Each route uses Zod schemas from `@tableside/types`.
 
 ### Order transitions
 
@@ -45,8 +45,8 @@ Cross-platform primitives built on React Native primitives + `react-native-web`.
 
 ## Contract generation
 
-1. `pnpm --filter @odyssey/backend gen:openapi` writes `services/backend/openapi/openapi.json`.
-2. `pnpm --filter @odyssey/api-client gen:client` runs Orval with the custom fetch mutator.
+1. `pnpm --filter @tableside/backend gen:openapi` writes `services/backend/openapi/openapi.json`.
+2. `pnpm --filter @tableside/api-client gen:client` runs Orval with the custom fetch mutator.
 3. `pnpm gen:contract:check` regenerates and asserts a clean git diff.
 
 Orval defaults generate **query hooks for GET** and **mutation hooks for POST/PATCH/DELETE**. Avoid setting both global `useQuery: true` and `useMutation: true` — that inverts hook types.

@@ -9,7 +9,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import { useHomeMetrics } from '@/features/home/useHomeMetrics';
 
 export default function HomeScreen() {

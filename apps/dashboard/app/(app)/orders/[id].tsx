@@ -13,9 +13,9 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
-import { formatDateTime } from '@odyssey/shared';
-import { getFulfillmentLabel } from '@odyssey/shared';
+} from '@tableside/ui';
+import { formatDateTime } from '@tableside/shared';
+import { getFulfillmentLabel } from '@tableside/shared';
 import { useOrderDetail, useOrderRouteParams } from '@/features/orders/useOrders';
 
 export default function OrderDetailScreen() {

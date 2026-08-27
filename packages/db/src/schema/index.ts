@@ -108,7 +108,7 @@ export type OpeningHoursDay = {
 
 export const businessSettings = pgTable('business_settings', {
   id: uuid('id').primaryKey().defaultRandom(),
-  restaurantName: varchar('restaurant_name', { length: 160 }).notNull().default('Odyssey Kitchen'),
+  restaurantName: varchar('restaurant_name', { length: 160 }).notNull().default('Tableside Kitchen'),
   timezone: varchar('timezone', { length: 64 }).notNull().default('America/New_York'),
   prepTimeMinutes: integer('prep_time_minutes').notNull().default(20),
   autoAcceptOrders: boolean('auto_accept_orders').notNull().default(false),

@@ -28,7 +28,7 @@
 
 **Choice**: All monetary fields stored and transmitted as integer cents.
 
-**Why**: Avoids floating-point rounding in totals, tax, and fee calculations (`calculateOrderTotals` in `@odyssey/types`).
+**Why**: Avoids floating-point rounding in totals, tax, and fee calculations (`calculateOrderTotals` in `@tableside/types`).
 
 **Tradeoff**: Human entry sometimes uses cent inputs in admin forms; display formatting is centralized in `MoneyText` / `formatMoney`.
 

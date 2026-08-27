@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, type TextProps } from 'react-native';
-import { formatMoney } from '@odyssey/shared';
+import { formatMoney } from '@tableside/shared';
 import { typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 

@@ -5,7 +5,7 @@ import {
   useGetOrdersId,
   usePostOrders,
   usePostOrdersIdTransition,
-} from '@odyssey/api-client';
+} from '@tableside/api-client';
 import type {
   GetOrders200,
   GetOrders200DataItem,
@@ -14,9 +14,9 @@ import type {
   GetOrdersStatus,
   PostOrders201,
   PostOrdersBody,
-} from '@odyssey/api-client';
-import { getActionLabel } from '@odyssey/shared';
-import { useToast } from '@odyssey/ui';
+} from '@tableside/api-client';
+import { getActionLabel } from '@tableside/shared';
+import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useOrdersList() {

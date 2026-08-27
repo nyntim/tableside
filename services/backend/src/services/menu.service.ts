@@ -3,8 +3,8 @@ import {
   menuItems,
   orderItems,
   orders,
-} from '@odyssey/db';
-import type { Database } from '@odyssey/db';
+} from '@tableside/db';
+import type { Database } from '@tableside/db';
 import { and, asc, count, eq, ilike, inArray, notInArray, or, sql } from 'drizzle-orm';
 import { conflictError, notFound } from '../lib/errors.js';
 

@@ -5,7 +5,7 @@ import {
   type FulfillmentType,
   type OrderAction,
   type OrderStatus,
-} from '@odyssey/db';
+} from '@tableside/db';
 
 export const ORDER_STATUSES = orderStatusEnum.enumValues;
 export const FULFILLMENT_TYPES = fulfillmentTypeEnum.enumValues;

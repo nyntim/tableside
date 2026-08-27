@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "Odyssey Ops",
-    "slug": "odyssey-ops",
+    "name": "Tableside",
+    "slug": "tableside",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "odyssey-ops",
+    "scheme": "tableside",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "web": {

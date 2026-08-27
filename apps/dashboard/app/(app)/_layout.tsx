@@ -2,7 +2,7 @@ import { usePathname, useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Nav, spacing, typography, useResponsive, useTheme } from '@odyssey/ui';
+import { Nav, spacing, typography, useResponsive, useTheme } from '@tableside/ui';
 import { Slot } from 'expo-router';
 
 const NAV_ITEMS = [
@@ -37,7 +37,7 @@ export default function AppLayout() {
             header={
               <View>
                 <Text style={[typography.xl, { color: colors.text, fontWeight: '700' }]}>
-                  Odyssey Ops
+                  Tableside
                 </Text>
                 <Text style={[typography.xs, { color: colors.textMuted }]}>Restaurant dashboard</Text>
               </View>

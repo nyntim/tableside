@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { statusColors, typography } from '../theme/tokens';
-import { getStatusLabel } from '@odyssey/shared';
+import { getStatusLabel } from '@tableside/shared';
 
 export type StatusBadgeProps = {
   status: string;

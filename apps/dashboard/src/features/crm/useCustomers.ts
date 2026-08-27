@@ -5,15 +5,15 @@ import {
   useGetCustomersId,
   usePatchCustomersId,
   usePostCustomers,
-} from '@odyssey/api-client';
+} from '@tableside/api-client';
 import type {
   GetCustomers200,
   GetCustomers200DataItem,
   GetCustomersId200,
   PostCustomersBody,
   PostCustomers201,
-} from '@odyssey/api-client';
-import { useToast } from '@odyssey/ui';
+} from '@tableside/api-client';
+import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useCustomersList() {

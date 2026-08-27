@@ -1,7 +1,7 @@
 import { defineConfig } from 'orval';
 
 export default defineConfig({
-  odyssey: {
+  tableside: {
     input: {
       target: '../../services/backend/openapi/openapi.json',
     },

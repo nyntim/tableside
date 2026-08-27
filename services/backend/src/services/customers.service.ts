@@ -1,5 +1,5 @@
-import { customers, orders } from '@odyssey/db';
-import type { Database } from '@odyssey/db';
+import { customers, orders } from '@tableside/db';
+import type { Database } from '@tableside/db';
 import { and, asc, count, desc, eq, ilike, max, or, sql, sum } from 'drizzle-orm';
 import { notFound } from '../lib/errors.js';
 

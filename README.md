@@ -1,6 +1,6 @@
-# Odyssey Ops
+# Tableside
 
-Fullstack restaurant operations dashboard for the Odyssey technical assignment.
+Fullstack restaurant operations dashboard.
 
 ## Stack
 
@@ -22,11 +22,11 @@ pnpm dev:dashboard  # Web dashboard on http://127.0.0.1:8791
 
 - Node.js 22+
 - pnpm 10+
-- PostgreSQL with database `odyssey_ops` (user/password: `odyssey`)
+- PostgreSQL with database `tableside` (user/password: `tableside`)
 
 ```bash
-createdb odyssey_ops
-# or: psql -c "CREATE USER odyssey WITH PASSWORD 'odyssey'; CREATE DATABASE odyssey_ops OWNER odyssey;"
+createdb tableside
+# or: psql -c "CREATE USER tableside WITH PASSWORD 'tableside'; CREATE DATABASE tableside OWNER tableside;"
 ```
 
 ## Workspace layout
@@ -53,15 +53,15 @@ createdb odyssey_ops
 ## Architecture highlights
 
 - **Order workflow**: Status changes only via `POST /orders/:id/transition` with explicit actions (never loose status PATCHes).
-- **Frontend data layer**: Pages consume feature hooks; hooks call only generated `@odyssey/api-client` hooks.
+- **Frontend data layer**: Pages consume feature hooks; hooks call only generated `@tableside/api-client` hooks.
 - **Money**: Stored and transmitted as integer cents; formatted at the UI layer via `MoneyText`.
-- **Contract-first**: Backend routes derive schemas from `@odyssey/types` (drizzle-zod); OpenAPI is generated and checked in CI.
+- **Contract-first**: Backend routes derive schemas from `@tableside/types` (drizzle-zod); OpenAPI is generated and checked in CI.
 
 See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) and [docs/TRADEOFFS.md](./docs/TRADEOFFS.md) for deeper context.
 
 ## UI Library
 
-Open the dashboard and navigate to **UI Library** (sidebar footer on desktop) to preview all `@odyssey/ui` primitives.
+Open the dashboard and navigate to **UI Library** (sidebar footer on desktop) to preview all `@tableside/ui` primitives.
 
 ## API docs
 

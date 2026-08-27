@@ -1,4 +1,4 @@
-import { ApiError } from '@odyssey/types';
+import { ApiError } from '@tableside/types';
 
 export class AppError extends Error {
   constructor(

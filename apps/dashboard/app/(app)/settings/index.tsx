@@ -9,7 +9,7 @@ import {
   spacing,
   typography,
   useTheme,
-} from '@odyssey/ui';
+} from '@tableside/ui';
 import { useSettingsForm } from '@/features/settings/useSettingsForm';
 
 export default function SettingsScreen() {
