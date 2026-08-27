@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostMenuCategories409Error } from './postMenuCategories409Error.js';
+import type { PostMenuCategories409Error } from './postMenuCategories409Error';
 
 export type PostMenuCategories409 = {
   error: PostMenuCategories409Error;

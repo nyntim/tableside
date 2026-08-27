@@ -1,97 +1,68 @@
 # Odyssey Ops
 
-A fullstack restaurant operations dashboard built for the Odyssey fullstack developer assignment.
+Fullstack restaurant operations dashboard for the Odyssey technical assignment.
 
 ## Stack
 
-- **Monorepo:** pnpm workspaces + Turborepo
-- **Dashboard:** Expo (React Native + Web) with expo-router
-- **Backend:** Hono on Cloudflare Workers
-- **Database:** PostgreSQL + Drizzle ORM + drizzle-zod
-- **API contract:** OpenAPI → Orval → React Query hooks
-
-## Project structure
-
-```text
-apps/dashboard          Expo dashboard (web-first)
-services/backend        Hono API on Cloudflare Workers
-packages/db             Drizzle schema, migrations, seed
-packages/types          API contracts + order state machine
-packages/api-client     Orval-generated React Query client
-packages/ui             Design system + primitives
-packages/shared         Shared utilities
-```
-
-## Prerequisites
-
-- Node.js 22+
-- pnpm 10+
-- PostgreSQL 16+
+- **Monorepo**: pnpm workspaces + Turborepo
+- **Frontend**: Expo SDK 57, React Native Web, expo-router
+- **Backend**: Hono on Cloudflare Workers
+- **Database**: PostgreSQL + Drizzle ORM + drizzle-zod
+- **Contract pipeline**: Drizzle → OpenAPI → Orval → React Query hooks
 
 ## Quick start
 
 ```bash
-# Install dependencies
-pnpm install
-
-# Start PostgreSQL and create the database (one-time)
-sudo pg_ctlcluster 16 main start
-sudo -u postgres psql -c "CREATE USER odyssey WITH PASSWORD 'odyssey' SUPERUSER;" || true
-sudo -u postgres psql -c "CREATE DATABASE odyssey_ops OWNER odyssey;" || true
-
-# Migrate, seed, and generate API client
-pnpm setup
-
-# Start backend (port 8799) and dashboard (port 8791)
-pnpm dev:backend   # terminal 1
-pnpm dev:dashboard # terminal 2
+pnpm setup          # install, migrate, seed, generate API client
+pnpm dev:backend    # API on http://127.0.0.1:8799
+pnpm dev:dashboard  # Web dashboard on http://127.0.0.1:8791
 ```
 
-Open the dashboard at `http://127.0.0.1:8791` and API docs at `http://127.0.0.1:8799/docs`.
+### Prerequisites
+
+- Node.js 22+
+- pnpm 10+
+- PostgreSQL with database `odyssey_ops` (user/password: `odyssey`)
+
+```bash
+createdb odyssey_ops
+# or: psql -c "CREATE USER odyssey WITH PASSWORD 'odyssey'; CREATE DATABASE odyssey_ops OWNER odyssey;"
+```
+
+## Workspace layout
+
+| Path | Purpose |
+|------|---------|
+| `apps/dashboard` | Expo operator dashboard (web + native) |
+| `services/backend` | Hono API worker |
+| `packages/db` | Drizzle schema, migrations, seed |
+| `packages/types` | Shared Zod contracts, order state machine |
+| `packages/api-client` | Orval-generated React Query hooks |
+| `packages/ui` | Cross-platform design system |
+| `packages/shared` | Money/date utilities |
 
 ## Scripts
 
 | Script | Description |
 |--------|-------------|
-| `pnpm dev:dashboard` | Start Expo web dashboard |
-| `pnpm dev:backend` | Start Hono backend via Wrangler |
-| `pnpm gen:contract` | Regenerate OpenAPI spec + Orval client |
-| `pnpm gen:contract:check` | Fail if generated artifacts are stale |
-| `pnpm db:migrate` | Run Drizzle migrations |
-| `pnpm db:seed` | Seed demo data |
-| `pnpm db:reset` | Drop and recreate public schema |
-| `pnpm lint` | Lint all packages |
-| `pnpm typecheck` | Typecheck all packages |
-| `pnpm test` | Run tests |
+| `pnpm dev` | Backend + dashboard in parallel |
+| `pnpm gen:contract` | Regenerate OpenAPI + client |
+| `pnpm gen:contract:check` | Fail if generated artifacts drift |
+| `pnpm lint` / `typecheck` / `test` | Quality gates across packages |
 
-## Architecture
+## Architecture highlights
 
-Contract pipeline:
+- **Order workflow**: Status changes only via `POST /orders/:id/transition` with explicit actions (never loose status PATCHes).
+- **Frontend data layer**: Pages consume feature hooks; hooks call only generated `@odyssey/api-client` hooks.
+- **Money**: Stored and transmitted as integer cents; formatted at the UI layer via `MoneyText`.
+- **Contract-first**: Backend routes derive schemas from `@odyssey/types` (drizzle-zod); OpenAPI is generated and checked in CI.
 
-```text
-Drizzle schema → drizzle-zod → Hono/OpenAPI → Orval → React Query hooks
-```
+See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) and [docs/TRADEOFFS.md](./docs/TRADEOFFS.md) for deeper context.
 
-- Persisted data truth starts in `packages/db`
-- Frontend API types come from generated Orval output only
-- Order status changes use `POST /orders/:id/transition` with explicit actions (server-side state machine)
+## UI Library
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and [docs/TRADEOFFS.md](docs/TRADEOFFS.md) for details.
+Open the dashboard and navigate to **UI Library** (sidebar footer on desktop) to preview all `@odyssey/ui` primitives.
 
-## Seed data
+## API docs
 
-Running `pnpm db:seed` creates:
-
-- Menu categories and items
-- 8 customers
-- ~50 orders across statuses and dates for realistic KPIs
-
-Default database URL:
-
-```text
-postgres://odyssey:odyssey@localhost:5432/odyssey_ops
-```
-
-## License
-
-Private — technical assignment submission.
+With the backend running: [http://127.0.0.1:8799/docs](http://127.0.0.1:8799/docs)

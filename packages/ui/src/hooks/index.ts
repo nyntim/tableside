@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Dimensions, Platform, useWindowDimensions } from 'react-native';
-import { breakpoints } from './tokens';
+import { breakpoints } from '../theme/tokens';
 
 export function useResponsive() {
   const { width } = useWindowDimensions();

@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostCustomers409Error } from './postCustomers409Error.js';
+import type { PostCustomers409Error } from './postCustomers409Error';
 
 export type PostCustomers409 = {
   error: PostCustomers409Error;

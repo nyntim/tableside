@@ -25,9 +25,9 @@ import {
   getGetCustomersResponseMock,
   getPatchCustomersIdResponseMock,
   getPostCustomersResponseMock
-} from './customers.faker.js';
+} from './customers.faker';
 
-export { getGetCustomersResponseMock, getPostCustomersResponseMock, getGetCustomersIdResponseMock, getPatchCustomersIdResponseMock } from './customers.faker.js';
+export { getGetCustomersResponseMock, getPostCustomersResponseMock, getGetCustomersIdResponseMock, getPatchCustomersIdResponseMock } from './customers.faker';
 
 
 export const getGetCustomersMockHandler = (overrideResponse?: GetCustomers200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetCustomers200> | GetCustomers200), options?: RequestHandlerOptions) => {

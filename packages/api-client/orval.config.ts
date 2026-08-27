@@ -19,9 +19,7 @@ export default defineConfig({
           name: 'customFetch',
         },
         query: {
-          useQuery: true,
-          useMutation: true,
-          useInfinite: false,
+          version: 5,
         },
       },
     },

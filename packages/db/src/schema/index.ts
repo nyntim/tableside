@@ -9,7 +9,7 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { fulfillmentTypeEnum, orderActionEnum, orderStatusEnum } from './enums';
+import { fulfillmentTypeEnum, orderActionEnum, orderStatusEnum } from './enums.js';
 
 export const menuCategories = pgTable('menu_categories', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -135,4 +135,4 @@ export const businessSettings = pgTable('business_settings', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
-export * from './enums';
+export * from './enums.js';

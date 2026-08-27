@@ -21,9 +21,9 @@ import type {
 import {
   getGetSettingsResponseMock,
   getPatchSettingsResponseMock
-} from './settings.faker.js';
+} from './settings.faker';
 
-export { getGetSettingsResponseMock, getPatchSettingsResponseMock } from './settings.faker.js';
+export { getGetSettingsResponseMock, getPatchSettingsResponseMock } from './settings.faker';
 
 
 export const getGetSettingsMockHandler = (overrideResponse?: GetSettings200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetSettings200> | GetSettings200), options?: RequestHandlerOptions) => {

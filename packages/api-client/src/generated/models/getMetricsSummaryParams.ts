@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetMetricsSummaryRange } from './getMetricsSummaryRange.js';
+import type { GetMetricsSummaryRange } from './getMetricsSummaryRange';
 
 export type GetMetricsSummaryParams = {
 range?: GetMetricsSummaryRange;

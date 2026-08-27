@@ -5,8 +5,8 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetOrdersFulfillmentType } from './getOrdersFulfillmentType.js';
-import type { GetOrdersStatus } from './getOrdersStatus.js';
+import type { GetOrdersFulfillmentType } from './getOrdersFulfillmentType';
+import type { GetOrdersStatus } from './getOrdersStatus';
 
 export type GetOrdersParams = {
 /**

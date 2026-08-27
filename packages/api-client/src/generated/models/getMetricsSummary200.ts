@@ -5,9 +5,9 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetMetricsSummary200OrdersByStatusItem } from './getMetricsSummary200OrdersByStatusItem.js';
-import type { GetMetricsSummary200PopularItemsItem } from './getMetricsSummary200PopularItemsItem.js';
-import type { GetMetricsSummary200RevenueByDayItem } from './getMetricsSummary200RevenueByDayItem.js';
+import type { GetMetricsSummary200OrdersByStatusItem } from './getMetricsSummary200OrdersByStatusItem';
+import type { GetMetricsSummary200PopularItemsItem } from './getMetricsSummary200PopularItemsItem';
+import type { GetMetricsSummary200RevenueByDayItem } from './getMetricsSummary200RevenueByDayItem';
 
 export type GetMetricsSummary200 = {
   /** @minimum 0 */

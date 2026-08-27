@@ -35,8 +35,10 @@ import type {
   PatchSettingsBody
 } from '../models';
 
-import { customFetch } from '../../mutator.js';
+import { customFetch } from '../../mutator';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -75,7 +77,7 @@ export const getGetSettingsUrl = () => {
   return `/settings`
 }
 
-export const getSettings = async ( options?: RequestInit): Promise<getSettingsResponse> => {
+export const getSettings = async ( options?: Parameters<typeof customFetch>[1]): Promise<getSettingsResponse> => {
 
   return customFetch<getSettingsResponse>(getGetSettingsUrl(),
   {
@@ -90,49 +92,78 @@ export const getSettings = async ( options?: RequestInit): Promise<getSettingsRe
 
 
 
-export const getGetSettingsMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getSettings>>, TError,void, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof getSettings>>, TError,void, TContext> => {
-
-const mutationKey = ['getSettings'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getSettings>>, void> = () => {
-
-
-          return  getSettings()
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetSettingsMutationResult = NonNullable<Awaited<ReturnType<typeof getSettings>>>
-
-    export type GetSettingsMutationError = unknown
-
-
-    export const useGetSettings = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getSettings>>, TError,void, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof getSettings>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return useMutation(getGetSettingsMutationOptions(options), queryClient);
+export const getGetSettingsQueryKey = () => {
+    return [
+    `/settings`
+    ] as const;
     }
-    export type patchSettingsResponse200 = {
+
+
+export const getGetSettingsQueryOptions = <TData = Awaited<ReturnType<typeof getSettings>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSettingsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSettings>>> = ({ signal }) => getSettings({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetSettingsQueryResult = NonNullable<Awaited<ReturnType<typeof getSettings>>>
+export type GetSettingsQueryError = unknown
+
+
+export function useGetSettings<TData = Awaited<ReturnType<typeof getSettings>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSettings>>,
+          TError,
+          Awaited<ReturnType<typeof getSettings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetSettings<TData = Awaited<ReturnType<typeof getSettings>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getSettings>>,
+          TError,
+          Awaited<ReturnType<typeof getSettings>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetSettings<TData = Awaited<ReturnType<typeof getSettings>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetSettings<TData = Awaited<ReturnType<typeof getSettings>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getSettings>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetSettingsQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export type patchSettingsResponse200 = {
   data: PatchSettings200
   status: 200
 }
@@ -179,7 +210,7 @@ export const getPatchSettingsUrl = () => {
   return `/settings`
 }
 
-export const patchSettings = async (patchSettingsBody?: PatchSettingsBody, options?: RequestInit): Promise<patchSettingsResponse> => {
+export const patchSettings = async (patchSettingsBody?: PatchSettingsBody, options?: Parameters<typeof customFetch>[1]): Promise<patchSettingsResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -200,74 +231,45 @@ return customFetch<patchSettingsResponse>(getPatchSettingsUrl(),
 
 
 
-export const getPatchSettingsQueryKey = (patchSettingsBody?: PatchSettingsBody,) => {
-    return [
-    'PATCH', `/settings`, patchSettingsBody
-    ] as const;
+export const getPatchSettingsMutationOptions = <TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchSettings>>, TError,PatchSettingsMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchSettings>>, TError,PatchSettingsMutationVariables, TContext> => {
+
+const mutationKey = ['patchSettings'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchSettings>>, PatchSettingsMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  patchSettings(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchSettingsMutationResult = NonNullable<Awaited<ReturnType<typeof patchSettings>>>
+    export type PatchSettingsMutationBody = PatchSettingsBody | undefined
+    export type PatchSettingsMutationError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503
+    export type PatchSettingsMutationVariables = {data?: PatchSettingsBody}
+
+    export const usePatchSettings = <TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchSettings>>, TError,PatchSettingsMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchSettings>>,
+        TError,
+        PatchSettingsMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPatchSettingsMutationOptions(options), queryClient);
     }
-
-
-export const getPatchSettingsQueryOptions = <TData = Awaited<ReturnType<typeof patchSettings>>, TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503>(patchSettingsBody?: PatchSettingsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPatchSettingsQueryKey(patchSettingsBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof patchSettings>>> = ({ signal }) => patchSettings(patchSettingsBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PatchSettingsQueryResult = NonNullable<Awaited<ReturnType<typeof patchSettings>>>
-export type PatchSettingsQueryError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503
-
-
-export function usePatchSettings<TData = Awaited<ReturnType<typeof patchSettings>>, TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503>(
- patchSettingsBody: undefined |  PatchSettingsBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchSettings>>,
-          TError,
-          Awaited<ReturnType<typeof patchSettings>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchSettings<TData = Awaited<ReturnType<typeof patchSettings>>, TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503>(
- patchSettingsBody?: PatchSettingsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchSettings>>,
-          TError,
-          Awaited<ReturnType<typeof patchSettings>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchSettings<TData = Awaited<ReturnType<typeof patchSettings>>, TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503>(
- patchSettingsBody?: PatchSettingsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePatchSettings<TData = Awaited<ReturnType<typeof patchSettings>>, TError = PatchSettings400 | PatchSettings404 | PatchSettings409 | PatchSettings422 | PatchSettings503>(
- patchSettingsBody?: PatchSettingsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchSettings>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPatchSettingsQueryOptions(patchSettingsBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-

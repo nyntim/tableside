@@ -20,7 +20,9 @@ function serializeCategory(category: Awaited<ReturnType<typeof menuService.listC
   };
 }
 
-function serializeItem(item: Awaited<ReturnType<typeof menuService.listMenuItems>>[0]) {
+function serializeItem(
+  item: Awaited<ReturnType<typeof menuService.listMenuItems>>[0] | Awaited<ReturnType<typeof menuService.deleteMenuItem>>,
+) {
   return {
     ...item,
     createdAt: item.createdAt.toISOString(),
@@ -77,6 +79,6 @@ export function registerMenuRoutes(app: OpenAPIHono<AppContext>) {
   app.openapi(deleteMenuItemRoute, async (c) => {
     const { id } = c.req.valid('param');
     const deleted = await menuService.deleteMenuItem(c.get('db'), id);
-    return c.json(serializeItem({ ...deleted, categoryName: undefined }), 200);
+    return c.json(serializeItem(deleted), 200);
   });
 }

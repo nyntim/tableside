@@ -25,9 +25,9 @@ import {
   getGetOrdersResponseMock,
   getPostOrdersIdTransitionResponseMock,
   getPostOrdersResponseMock
-} from './orders.faker.js';
+} from './orders.faker';
 
-export { getGetOrdersResponseMock, getPostOrdersResponseMock, getGetOrdersIdResponseMock, getPostOrdersIdTransitionResponseMock } from './orders.faker.js';
+export { getGetOrdersResponseMock, getPostOrdersResponseMock, getGetOrdersIdResponseMock, getPostOrdersIdTransitionResponseMock } from './orders.faker';
 
 
 export const getGetOrdersMockHandler = (overrideResponse?: GetOrders200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetOrders200> | GetOrders200), options?: RequestHandlerOptions) => {

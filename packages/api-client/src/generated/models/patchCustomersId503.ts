@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchCustomersId503Error } from './patchCustomersId503Error.js';
+import type { PatchCustomersId503Error } from './patchCustomersId503Error';
 
 export type PatchCustomersId503 = {
   error: PatchCustomersId503Error;

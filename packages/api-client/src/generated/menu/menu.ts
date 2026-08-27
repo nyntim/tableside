@@ -70,8 +70,10 @@ import type {
   PostMenuItemsBody
 } from '../models';
 
-import { customFetch } from '../../mutator.js';
+import { customFetch } from '../../mutator';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -110,7 +112,7 @@ export const getGetMenuCategoriesUrl = () => {
   return `/menu/categories`
 }
 
-export const getMenuCategories = async ( options?: RequestInit): Promise<getMenuCategoriesResponse> => {
+export const getMenuCategories = async ( options?: Parameters<typeof customFetch>[1]): Promise<getMenuCategoriesResponse> => {
 
   return customFetch<getMenuCategoriesResponse>(getGetMenuCategoriesUrl(),
   {
@@ -125,49 +127,78 @@ export const getMenuCategories = async ( options?: RequestInit): Promise<getMenu
 
 
 
-export const getGetMenuCategoriesMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError,void, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError,void, TContext> => {
-
-const mutationKey = ['getMenuCategories'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getMenuCategories>>, void> = () => {
-
-
-          return  getMenuCategories()
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetMenuCategoriesMutationResult = NonNullable<Awaited<ReturnType<typeof getMenuCategories>>>
-
-    export type GetMenuCategoriesMutationError = unknown
-
-
-    export const useGetMenuCategories = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError,void, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof getMenuCategories>>,
-        TError,
-        void,
-        TContext
-      > => {
-      return useMutation(getGetMenuCategoriesMutationOptions(options), queryClient);
+export const getGetMenuCategoriesQueryKey = () => {
+    return [
+    `/menu/categories`
+    ] as const;
     }
-    export type postMenuCategoriesResponse201 = {
+
+
+export const getGetMenuCategoriesQueryOptions = <TData = Awaited<ReturnType<typeof getMenuCategories>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMenuCategoriesQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMenuCategories>>> = ({ signal }) => getMenuCategories({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetMenuCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof getMenuCategories>>>
+export type GetMenuCategoriesQueryError = unknown
+
+
+export function useGetMenuCategories<TData = Awaited<ReturnType<typeof getMenuCategories>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMenuCategories>>,
+          TError,
+          Awaited<ReturnType<typeof getMenuCategories>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMenuCategories<TData = Awaited<ReturnType<typeof getMenuCategories>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMenuCategories>>,
+          TError,
+          Awaited<ReturnType<typeof getMenuCategories>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMenuCategories<TData = Awaited<ReturnType<typeof getMenuCategories>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetMenuCategories<TData = Awaited<ReturnType<typeof getMenuCategories>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuCategories>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetMenuCategoriesQueryOptions(options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export type postMenuCategoriesResponse201 = {
   data: PostMenuCategories201
   status: 201
 }
@@ -214,7 +245,7 @@ export const getPostMenuCategoriesUrl = () => {
   return `/menu/categories`
 }
 
-export const postMenuCategories = async (postMenuCategoriesBody?: PostMenuCategoriesBody, options?: RequestInit): Promise<postMenuCategoriesResponse> => {
+export const postMenuCategories = async (postMenuCategoriesBody?: PostMenuCategoriesBody, options?: Parameters<typeof customFetch>[1]): Promise<postMenuCategoriesResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -235,78 +266,49 @@ return customFetch<postMenuCategoriesResponse>(getPostMenuCategoriesUrl(),
 
 
 
-export const getPostMenuCategoriesQueryKey = (postMenuCategoriesBody?: PostMenuCategoriesBody,) => {
-    return [
-    'POST', `/menu/categories`, postMenuCategoriesBody
-    ] as const;
+export const getPostMenuCategoriesMutationOptions = <TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError,PostMenuCategoriesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError,PostMenuCategoriesMutationVariables, TContext> => {
+
+const mutationKey = ['postMenuCategories'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postMenuCategories>>, PostMenuCategoriesMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  postMenuCategories(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostMenuCategoriesMutationResult = NonNullable<Awaited<ReturnType<typeof postMenuCategories>>>
+    export type PostMenuCategoriesMutationBody = PostMenuCategoriesBody | undefined
+    export type PostMenuCategoriesMutationError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503
+    export type PostMenuCategoriesMutationVariables = {data?: PostMenuCategoriesBody}
+
+    export const usePostMenuCategories = <TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError,PostMenuCategoriesMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postMenuCategories>>,
+        TError,
+        PostMenuCategoriesMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPostMenuCategoriesMutationOptions(options), queryClient);
     }
-
-
-export const getPostMenuCategoriesQueryOptions = <TData = Awaited<ReturnType<typeof postMenuCategories>>, TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503>(postMenuCategoriesBody?: PostMenuCategoriesBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPostMenuCategoriesQueryKey(postMenuCategoriesBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postMenuCategories>>> = ({ signal }) => postMenuCategories(postMenuCategoriesBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostMenuCategoriesQueryResult = NonNullable<Awaited<ReturnType<typeof postMenuCategories>>>
-export type PostMenuCategoriesQueryError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503
-
-
-export function usePostMenuCategories<TData = Awaited<ReturnType<typeof postMenuCategories>>, TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503>(
- postMenuCategoriesBody: undefined |  PostMenuCategoriesBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postMenuCategories>>,
-          TError,
-          Awaited<ReturnType<typeof postMenuCategories>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostMenuCategories<TData = Awaited<ReturnType<typeof postMenuCategories>>, TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503>(
- postMenuCategoriesBody?: PostMenuCategoriesBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postMenuCategories>>,
-          TError,
-          Awaited<ReturnType<typeof postMenuCategories>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostMenuCategories<TData = Awaited<ReturnType<typeof postMenuCategories>>, TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503>(
- postMenuCategoriesBody?: PostMenuCategoriesBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePostMenuCategories<TData = Awaited<ReturnType<typeof postMenuCategories>>, TError = PostMenuCategories400 | PostMenuCategories404 | PostMenuCategories409 | PostMenuCategories422 | PostMenuCategories503>(
- postMenuCategoriesBody?: PostMenuCategoriesBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuCategories>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPostMenuCategoriesQueryOptions(postMenuCategoriesBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type patchMenuCategoriesIdResponse200 = {
+    export type patchMenuCategoriesIdResponse200 = {
   data: PatchMenuCategoriesId200
   status: 200
 }
@@ -354,7 +356,7 @@ export const getPatchMenuCategoriesIdUrl = (id: string,) => {
 }
 
 export const patchMenuCategoriesId = async (id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: RequestInit): Promise<patchMenuCategoriesIdResponse> => {
+    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: Parameters<typeof customFetch>[1]): Promise<patchMenuCategoriesIdResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -375,84 +377,49 @@ return customFetch<patchMenuCategoriesIdResponse>(getPatchMenuCategoriesIdUrl(id
 
 
 
-export const getPatchMenuCategoriesIdQueryKey = (id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody,) => {
-    return [
-    'PATCH', `/menu/categories/${id}`, patchMenuCategoriesIdBody
-    ] as const;
+export const getPatchMenuCategoriesIdMutationOptions = <TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError,PatchMenuCategoriesIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError,PatchMenuCategoriesIdMutationVariables, TContext> => {
+
+const mutationKey = ['patchMenuCategoriesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchMenuCategoriesId>>, PatchMenuCategoriesIdMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchMenuCategoriesId(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchMenuCategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchMenuCategoriesId>>>
+    export type PatchMenuCategoriesIdMutationBody = PatchMenuCategoriesIdBody | undefined
+    export type PatchMenuCategoriesIdMutationError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503
+    export type PatchMenuCategoriesIdMutationVariables = {id: string;data?: PatchMenuCategoriesIdBody}
+
+    export const usePatchMenuCategoriesId = <TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError,PatchMenuCategoriesIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchMenuCategoriesId>>,
+        TError,
+        PatchMenuCategoriesIdMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPatchMenuCategoriesIdMutationOptions(options), queryClient);
     }
-
-
-export const getPatchMenuCategoriesIdQueryOptions = <TData = Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503>(id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPatchMenuCategoriesIdQueryKey(id,patchMenuCategoriesIdBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof patchMenuCategoriesId>>> = ({ signal }) => patchMenuCategoriesId(id,patchMenuCategoriesIdBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PatchMenuCategoriesIdQueryResult = NonNullable<Awaited<ReturnType<typeof patchMenuCategoriesId>>>
-export type PatchMenuCategoriesIdQueryError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503
-
-
-export function usePatchMenuCategoriesId<TData = Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503>(
- id: string,
-    patchMenuCategoriesIdBody: undefined |  PatchMenuCategoriesIdBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchMenuCategoriesId>>,
-          TError,
-          Awaited<ReturnType<typeof patchMenuCategoriesId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchMenuCategoriesId<TData = Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503>(
- id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchMenuCategoriesId>>,
-          TError,
-          Awaited<ReturnType<typeof patchMenuCategoriesId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchMenuCategoriesId<TData = Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503>(
- id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePatchMenuCategoriesId<TData = Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError = PatchMenuCategoriesId400 | PatchMenuCategoriesId404 | PatchMenuCategoriesId409 | PatchMenuCategoriesId422 | PatchMenuCategoriesId503>(
- id: string,
-    patchMenuCategoriesIdBody?: PatchMenuCategoriesIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuCategoriesId>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPatchMenuCategoriesIdQueryOptions(id,patchMenuCategoriesIdBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type deleteMenuCategoriesIdResponse200 = {
+    export type deleteMenuCategoriesIdResponse200 = {
   data: DeleteMenuCategoriesId200
   status: 200
 }
@@ -499,7 +466,7 @@ export const getDeleteMenuCategoriesIdUrl = (id: string,) => {
   return `/menu/categories/${id}`
 }
 
-export const deleteMenuCategoriesId = async (id: string, options?: RequestInit): Promise<deleteMenuCategoriesIdResponse> => {
+export const deleteMenuCategoriesId = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<deleteMenuCategoriesIdResponse> => {
 
   return customFetch<deleteMenuCategoriesIdResponse>(getDeleteMenuCategoriesIdUrl(id),
   {
@@ -514,78 +481,49 @@ export const deleteMenuCategoriesId = async (id: string, options?: RequestInit):
 
 
 
-export const getDeleteMenuCategoriesIdQueryKey = (id: string,) => {
-    return [
-    'DELETE', `/menu/categories/${id}`
-    ] as const;
+export const getDeleteMenuCategoriesIdMutationOptions = <TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError,DeleteMenuCategoriesIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError,DeleteMenuCategoriesIdMutationVariables, TContext> => {
+
+const mutationKey = ['deleteMenuCategoriesId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, DeleteMenuCategoriesIdMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMenuCategoriesId(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMenuCategoriesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMenuCategoriesId>>>
+
+    export type DeleteMenuCategoriesIdMutationError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503
+    export type DeleteMenuCategoriesIdMutationVariables = {id: string}
+
+    export const useDeleteMenuCategoriesId = <TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError,DeleteMenuCategoriesIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMenuCategoriesId>>,
+        TError,
+        DeleteMenuCategoriesIdMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteMenuCategoriesIdMutationOptions(options), queryClient);
     }
-
-
-export const getDeleteMenuCategoriesIdQueryOptions = <TData = Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getDeleteMenuCategoriesIdQueryKey(id);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deleteMenuCategoriesId>>> = ({ signal }) => deleteMenuCategoriesId(id, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeleteMenuCategoriesIdQueryResult = NonNullable<Awaited<ReturnType<typeof deleteMenuCategoriesId>>>
-export type DeleteMenuCategoriesIdQueryError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503
-
-
-export function useDeleteMenuCategoriesId<TData = Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof deleteMenuCategoriesId>>,
-          TError,
-          Awaited<ReturnType<typeof deleteMenuCategoriesId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeleteMenuCategoriesId<TData = Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof deleteMenuCategoriesId>>,
-          TError,
-          Awaited<ReturnType<typeof deleteMenuCategoriesId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeleteMenuCategoriesId<TData = Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useDeleteMenuCategoriesId<TData = Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError = DeleteMenuCategoriesId400 | DeleteMenuCategoriesId404 | DeleteMenuCategoriesId409 | DeleteMenuCategoriesId422 | DeleteMenuCategoriesId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuCategoriesId>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getDeleteMenuCategoriesIdQueryOptions(id,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type getMenuItemsResponse200 = {
+    export type getMenuItemsResponse200 = {
   data: GetMenuItems200Item[]
   status: 200
 }
@@ -612,7 +550,7 @@ export const getGetMenuItemsUrl = (params?: GetMenuItemsParams,) => {
   return stringifiedParams.length > 0 ? `/menu/items?${stringifiedParams}` : `/menu/items`
 }
 
-export const getMenuItems = async (params?: GetMenuItemsParams, options?: RequestInit): Promise<getMenuItemsResponse> => {
+export const getMenuItems = async (params?: GetMenuItemsParams, options?: Parameters<typeof customFetch>[1]): Promise<getMenuItemsResponse> => {
 
   return customFetch<getMenuItemsResponse>(getGetMenuItemsUrl(params),
   {
@@ -627,49 +565,78 @@ export const getMenuItems = async (params?: GetMenuItemsParams, options?: Reques
 
 
 
-export const getGetMenuItemsMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMenuItems>>, TError,GetMenuItemsMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof getMenuItems>>, TError,GetMenuItemsMutationVariables, TContext> => {
-
-const mutationKey = ['getMenuItems'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getMenuItems>>, GetMenuItemsMutationVariables> = (props) => {
-          const {params} = props ?? {};
-
-          return  getMenuItems(params,)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetMenuItemsMutationResult = NonNullable<Awaited<ReturnType<typeof getMenuItems>>>
-
-    export type GetMenuItemsMutationError = unknown
-    export type GetMenuItemsMutationVariables = {params?: GetMenuItemsParams}
-
-    export const useGetMenuItems = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getMenuItems>>, TError,GetMenuItemsMutationVariables, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof getMenuItems>>,
-        TError,
-        GetMenuItemsMutationVariables,
-        TContext
-      > => {
-      return useMutation(getGetMenuItemsMutationOptions(options), queryClient);
+export const getGetMenuItemsQueryKey = (params?: GetMenuItemsParams,) => {
+    return [
+    `/menu/items`, ...(params ? [params] : [])
+    ] as const;
     }
-    export type postMenuItemsResponse201 = {
+
+
+export const getGetMenuItemsQueryOptions = <TData = Awaited<ReturnType<typeof getMenuItems>>, TError = unknown>(params?: GetMenuItemsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetMenuItemsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMenuItems>>> = ({ signal }) => getMenuItems(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetMenuItemsQueryResult = NonNullable<Awaited<ReturnType<typeof getMenuItems>>>
+export type GetMenuItemsQueryError = unknown
+
+
+export function useGetMenuItems<TData = Awaited<ReturnType<typeof getMenuItems>>, TError = unknown>(
+ params: undefined |  GetMenuItemsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMenuItems>>,
+          TError,
+          Awaited<ReturnType<typeof getMenuItems>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMenuItems<TData = Awaited<ReturnType<typeof getMenuItems>>, TError = unknown>(
+ params?: GetMenuItemsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getMenuItems>>,
+          TError,
+          Awaited<ReturnType<typeof getMenuItems>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetMenuItems<TData = Awaited<ReturnType<typeof getMenuItems>>, TError = unknown>(
+ params?: GetMenuItemsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetMenuItems<TData = Awaited<ReturnType<typeof getMenuItems>>, TError = unknown>(
+ params?: GetMenuItemsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMenuItems>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetMenuItemsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export type postMenuItemsResponse201 = {
   data: PostMenuItems201
   status: 201
 }
@@ -716,7 +683,7 @@ export const getPostMenuItemsUrl = () => {
   return `/menu/items`
 }
 
-export const postMenuItems = async (postMenuItemsBody?: PostMenuItemsBody, options?: RequestInit): Promise<postMenuItemsResponse> => {
+export const postMenuItems = async (postMenuItemsBody?: PostMenuItemsBody, options?: Parameters<typeof customFetch>[1]): Promise<postMenuItemsResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -737,78 +704,49 @@ return customFetch<postMenuItemsResponse>(getPostMenuItemsUrl(),
 
 
 
-export const getPostMenuItemsQueryKey = (postMenuItemsBody?: PostMenuItemsBody,) => {
-    return [
-    'POST', `/menu/items`, postMenuItemsBody
-    ] as const;
+export const getPostMenuItemsMutationOptions = <TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postMenuItems>>, TError,PostMenuItemsMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postMenuItems>>, TError,PostMenuItemsMutationVariables, TContext> => {
+
+const mutationKey = ['postMenuItems'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postMenuItems>>, PostMenuItemsMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  postMenuItems(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostMenuItemsMutationResult = NonNullable<Awaited<ReturnType<typeof postMenuItems>>>
+    export type PostMenuItemsMutationBody = PostMenuItemsBody | undefined
+    export type PostMenuItemsMutationError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503
+    export type PostMenuItemsMutationVariables = {data?: PostMenuItemsBody}
+
+    export const usePostMenuItems = <TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postMenuItems>>, TError,PostMenuItemsMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postMenuItems>>,
+        TError,
+        PostMenuItemsMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPostMenuItemsMutationOptions(options), queryClient);
     }
-
-
-export const getPostMenuItemsQueryOptions = <TData = Awaited<ReturnType<typeof postMenuItems>>, TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503>(postMenuItemsBody?: PostMenuItemsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPostMenuItemsQueryKey(postMenuItemsBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postMenuItems>>> = ({ signal }) => postMenuItems(postMenuItemsBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostMenuItemsQueryResult = NonNullable<Awaited<ReturnType<typeof postMenuItems>>>
-export type PostMenuItemsQueryError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503
-
-
-export function usePostMenuItems<TData = Awaited<ReturnType<typeof postMenuItems>>, TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503>(
- postMenuItemsBody: undefined |  PostMenuItemsBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postMenuItems>>,
-          TError,
-          Awaited<ReturnType<typeof postMenuItems>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostMenuItems<TData = Awaited<ReturnType<typeof postMenuItems>>, TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503>(
- postMenuItemsBody?: PostMenuItemsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postMenuItems>>,
-          TError,
-          Awaited<ReturnType<typeof postMenuItems>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostMenuItems<TData = Awaited<ReturnType<typeof postMenuItems>>, TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503>(
- postMenuItemsBody?: PostMenuItemsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePostMenuItems<TData = Awaited<ReturnType<typeof postMenuItems>>, TError = PostMenuItems400 | PostMenuItems404 | PostMenuItems409 | PostMenuItems422 | PostMenuItems503>(
- postMenuItemsBody?: PostMenuItemsBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postMenuItems>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPostMenuItemsQueryOptions(postMenuItemsBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type patchMenuItemsIdResponse200 = {
+    export type patchMenuItemsIdResponse200 = {
   data: PatchMenuItemsId200
   status: 200
 }
@@ -856,7 +794,7 @@ export const getPatchMenuItemsIdUrl = (id: string,) => {
 }
 
 export const patchMenuItemsId = async (id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: RequestInit): Promise<patchMenuItemsIdResponse> => {
+    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: Parameters<typeof customFetch>[1]): Promise<patchMenuItemsIdResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -877,84 +815,49 @@ return customFetch<patchMenuItemsIdResponse>(getPatchMenuItemsIdUrl(id),
 
 
 
-export const getPatchMenuItemsIdQueryKey = (id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody,) => {
-    return [
-    'PATCH', `/menu/items/${id}`, patchMenuItemsIdBody
-    ] as const;
+export const getPatchMenuItemsIdMutationOptions = <TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError,PatchMenuItemsIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError,PatchMenuItemsIdMutationVariables, TContext> => {
+
+const mutationKey = ['patchMenuItemsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchMenuItemsId>>, PatchMenuItemsIdMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  patchMenuItemsId(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchMenuItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof patchMenuItemsId>>>
+    export type PatchMenuItemsIdMutationBody = PatchMenuItemsIdBody | undefined
+    export type PatchMenuItemsIdMutationError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503
+    export type PatchMenuItemsIdMutationVariables = {id: string;data?: PatchMenuItemsIdBody}
+
+    export const usePatchMenuItemsId = <TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError,PatchMenuItemsIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof patchMenuItemsId>>,
+        TError,
+        PatchMenuItemsIdMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPatchMenuItemsIdMutationOptions(options), queryClient);
     }
-
-
-export const getPatchMenuItemsIdQueryOptions = <TData = Awaited<ReturnType<typeof patchMenuItemsId>>, TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503>(id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPatchMenuItemsIdQueryKey(id,patchMenuItemsIdBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof patchMenuItemsId>>> = ({ signal }) => patchMenuItemsId(id,patchMenuItemsIdBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PatchMenuItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof patchMenuItemsId>>>
-export type PatchMenuItemsIdQueryError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503
-
-
-export function usePatchMenuItemsId<TData = Awaited<ReturnType<typeof patchMenuItemsId>>, TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503>(
- id: string,
-    patchMenuItemsIdBody: undefined |  PatchMenuItemsIdBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchMenuItemsId>>,
-          TError,
-          Awaited<ReturnType<typeof patchMenuItemsId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchMenuItemsId<TData = Awaited<ReturnType<typeof patchMenuItemsId>>, TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503>(
- id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof patchMenuItemsId>>,
-          TError,
-          Awaited<ReturnType<typeof patchMenuItemsId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePatchMenuItemsId<TData = Awaited<ReturnType<typeof patchMenuItemsId>>, TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503>(
- id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePatchMenuItemsId<TData = Awaited<ReturnType<typeof patchMenuItemsId>>, TError = PatchMenuItemsId400 | PatchMenuItemsId404 | PatchMenuItemsId409 | PatchMenuItemsId422 | PatchMenuItemsId503>(
- id: string,
-    patchMenuItemsIdBody?: PatchMenuItemsIdBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof patchMenuItemsId>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPatchMenuItemsIdQueryOptions(id,patchMenuItemsIdBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type deleteMenuItemsIdResponse200 = {
+    export type deleteMenuItemsIdResponse200 = {
   data: DeleteMenuItemsId200
   status: 200
 }
@@ -1001,7 +904,7 @@ export const getDeleteMenuItemsIdUrl = (id: string,) => {
   return `/menu/items/${id}`
 }
 
-export const deleteMenuItemsId = async (id: string, options?: RequestInit): Promise<deleteMenuItemsIdResponse> => {
+export const deleteMenuItemsId = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<deleteMenuItemsIdResponse> => {
 
   return customFetch<deleteMenuItemsIdResponse>(getDeleteMenuItemsIdUrl(id),
   {
@@ -1016,74 +919,45 @@ export const deleteMenuItemsId = async (id: string, options?: RequestInit): Prom
 
 
 
-export const getDeleteMenuItemsIdQueryKey = (id: string,) => {
-    return [
-    'DELETE', `/menu/items/${id}`
-    ] as const;
+export const getDeleteMenuItemsIdMutationOptions = <TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError,DeleteMenuItemsIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError,DeleteMenuItemsIdMutationVariables, TContext> => {
+
+const mutationKey = ['deleteMenuItemsId'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMenuItemsId>>, DeleteMenuItemsIdMutationVariables> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteMenuItemsId(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteMenuItemsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMenuItemsId>>>
+
+    export type DeleteMenuItemsIdMutationError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503
+    export type DeleteMenuItemsIdMutationVariables = {id: string}
+
+    export const useDeleteMenuItemsId = <TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError,DeleteMenuItemsIdMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof deleteMenuItemsId>>,
+        TError,
+        DeleteMenuItemsIdMutationVariables,
+        TContext
+      > => {
+      return useMutation(getDeleteMenuItemsIdMutationOptions(options), queryClient);
     }
-
-
-export const getDeleteMenuItemsIdQueryOptions = <TData = Awaited<ReturnType<typeof deleteMenuItemsId>>, TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getDeleteMenuItemsIdQueryKey(id);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof deleteMenuItemsId>>> = ({ signal }) => deleteMenuItemsId(id, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type DeleteMenuItemsIdQueryResult = NonNullable<Awaited<ReturnType<typeof deleteMenuItemsId>>>
-export type DeleteMenuItemsIdQueryError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503
-
-
-export function useDeleteMenuItemsId<TData = Awaited<ReturnType<typeof deleteMenuItemsId>>, TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503>(
- id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof deleteMenuItemsId>>,
-          TError,
-          Awaited<ReturnType<typeof deleteMenuItemsId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeleteMenuItemsId<TData = Awaited<ReturnType<typeof deleteMenuItemsId>>, TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof deleteMenuItemsId>>,
-          TError,
-          Awaited<ReturnType<typeof deleteMenuItemsId>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useDeleteMenuItemsId<TData = Awaited<ReturnType<typeof deleteMenuItemsId>>, TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useDeleteMenuItemsId<TData = Awaited<ReturnType<typeof deleteMenuItemsId>>, TError = DeleteMenuItemsId400 | DeleteMenuItemsId404 | DeleteMenuItemsId409 | DeleteMenuItemsId422 | DeleteMenuItemsId503>(
- id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof deleteMenuItemsId>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getDeleteMenuItemsIdQueryOptions(id,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-

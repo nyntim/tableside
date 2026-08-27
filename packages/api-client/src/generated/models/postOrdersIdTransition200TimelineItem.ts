@@ -5,9 +5,9 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostOrdersIdTransition200TimelineItemAction } from './postOrdersIdTransition200TimelineItemAction.js';
-import type { PostOrdersIdTransition200TimelineItemFromStatus } from './postOrdersIdTransition200TimelineItemFromStatus.js';
-import type { PostOrdersIdTransition200TimelineItemToStatus } from './postOrdersIdTransition200TimelineItemToStatus.js';
+import type { PostOrdersIdTransition200TimelineItemAction } from './postOrdersIdTransition200TimelineItemAction';
+import type { PostOrdersIdTransition200TimelineItemFromStatus } from './postOrdersIdTransition200TimelineItemFromStatus';
+import type { PostOrdersIdTransition200TimelineItemToStatus } from './postOrdersIdTransition200TimelineItemToStatus';
 
 export type PostOrdersIdTransition200TimelineItem = {
   id: string;

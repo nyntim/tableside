@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostMenuItems400Error } from './postMenuItems400Error.js';
+import type { PostMenuItems400Error } from './postMenuItems400Error';
 
 export type PostMenuItems400 = {
   error: PostMenuItems400Error;

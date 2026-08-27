@@ -49,8 +49,10 @@ import type {
   PostOrdersIdTransitionBody
 } from '../models';
 
-import { customFetch } from '../../mutator.js';
+import { customFetch } from '../../mutator';
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
@@ -96,7 +98,7 @@ export const getGetOrdersUrl = (params?: GetOrdersParams,) => {
   return stringifiedParams.length > 0 ? `/orders?${stringifiedParams}` : `/orders`
 }
 
-export const getOrders = async (params?: GetOrdersParams, options?: RequestInit): Promise<getOrdersResponse> => {
+export const getOrders = async (params?: GetOrdersParams, options?: Parameters<typeof customFetch>[1]): Promise<getOrdersResponse> => {
 
   return customFetch<getOrdersResponse>(getGetOrdersUrl(params),
   {
@@ -111,49 +113,78 @@ export const getOrders = async (params?: GetOrdersParams, options?: RequestInit)
 
 
 
-export const getGetOrdersMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getOrders>>, TError,GetOrdersMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof getOrders>>, TError,GetOrdersMutationVariables, TContext> => {
-
-const mutationKey = ['getOrders'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getOrders>>, GetOrdersMutationVariables> = (props) => {
-          const {params} = props ?? {};
-
-          return  getOrders(params,)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof getOrders>>>
-
-    export type GetOrdersMutationError = unknown
-    export type GetOrdersMutationVariables = {params?: GetOrdersParams}
-
-    export const useGetOrders = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getOrders>>, TError,GetOrdersMutationVariables, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof getOrders>>,
-        TError,
-        GetOrdersMutationVariables,
-        TContext
-      > => {
-      return useMutation(getGetOrdersMutationOptions(options), queryClient);
+export const getGetOrdersQueryKey = (params?: GetOrdersParams,) => {
+    return [
+    `/orders`, ...(params ? [params] : [])
+    ] as const;
     }
-    export type postOrdersResponse201 = {
+
+
+export const getGetOrdersQueryOptions = <TData = Awaited<ReturnType<typeof getOrders>>, TError = unknown>(params?: GetOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrders>>> = ({ signal }) => getOrders(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof getOrders>>>
+export type GetOrdersQueryError = unknown
+
+
+export function useGetOrders<TData = Awaited<ReturnType<typeof getOrders>>, TError = unknown>(
+ params: undefined |  GetOrdersParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getOrders>>,
+          TError,
+          Awaited<ReturnType<typeof getOrders>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOrders<TData = Awaited<ReturnType<typeof getOrders>>, TError = unknown>(
+ params?: GetOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getOrders>>,
+          TError,
+          Awaited<ReturnType<typeof getOrders>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOrders<TData = Awaited<ReturnType<typeof getOrders>>, TError = unknown>(
+ params?: GetOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetOrders<TData = Awaited<ReturnType<typeof getOrders>>, TError = unknown>(
+ params?: GetOrdersParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrders>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export type postOrdersResponse201 = {
   data: PostOrders201
   status: 201
 }
@@ -200,7 +231,7 @@ export const getPostOrdersUrl = () => {
   return `/orders`
 }
 
-export const postOrders = async (postOrdersBody?: PostOrdersBody, options?: RequestInit): Promise<postOrdersResponse> => {
+export const postOrders = async (postOrdersBody?: PostOrdersBody, options?: Parameters<typeof customFetch>[1]): Promise<postOrdersResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -221,78 +252,49 @@ return customFetch<postOrdersResponse>(getPostOrdersUrl(),
 
 
 
-export const getPostOrdersQueryKey = (postOrdersBody?: PostOrdersBody,) => {
-    return [
-    'POST', `/orders`, postOrdersBody
-    ] as const;
+export const getPostOrdersMutationOptions = <TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postOrders>>, TError,PostOrdersMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postOrders>>, TError,PostOrdersMutationVariables, TContext> => {
+
+const mutationKey = ['postOrders'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postOrders>>, PostOrdersMutationVariables> = (props) => {
+          const {data} = props ?? {};
+
+          return  postOrders(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostOrdersMutationResult = NonNullable<Awaited<ReturnType<typeof postOrders>>>
+    export type PostOrdersMutationBody = PostOrdersBody | undefined
+    export type PostOrdersMutationError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503
+    export type PostOrdersMutationVariables = {data?: PostOrdersBody}
+
+    export const usePostOrders = <TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postOrders>>, TError,PostOrdersMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postOrders>>,
+        TError,
+        PostOrdersMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPostOrdersMutationOptions(options), queryClient);
     }
-
-
-export const getPostOrdersQueryOptions = <TData = Awaited<ReturnType<typeof postOrders>>, TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503>(postOrdersBody?: PostOrdersBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPostOrdersQueryKey(postOrdersBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postOrders>>> = ({ signal }) => postOrders(postOrdersBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostOrdersQueryResult = NonNullable<Awaited<ReturnType<typeof postOrders>>>
-export type PostOrdersQueryError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503
-
-
-export function usePostOrders<TData = Awaited<ReturnType<typeof postOrders>>, TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503>(
- postOrdersBody: undefined |  PostOrdersBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postOrders>>,
-          TError,
-          Awaited<ReturnType<typeof postOrders>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostOrders<TData = Awaited<ReturnType<typeof postOrders>>, TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503>(
- postOrdersBody?: PostOrdersBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postOrders>>,
-          TError,
-          Awaited<ReturnType<typeof postOrders>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostOrders<TData = Awaited<ReturnType<typeof postOrders>>, TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503>(
- postOrdersBody?: PostOrdersBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePostOrders<TData = Awaited<ReturnType<typeof postOrders>>, TError = PostOrders400 | PostOrders404 | PostOrders409 | PostOrders422 | PostOrders503>(
- postOrdersBody?: PostOrdersBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrders>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPostOrdersQueryOptions(postOrdersBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-
-export type getOrdersIdResponse200 = {
+    export type getOrdersIdResponse200 = {
   data: GetOrdersId200
   status: 200
 }
@@ -339,7 +341,7 @@ export const getGetOrdersIdUrl = (id: string,) => {
   return `/orders/${id}`
 }
 
-export const getOrdersId = async (id: string, options?: RequestInit): Promise<getOrdersIdResponse> => {
+export const getOrdersId = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<getOrdersIdResponse> => {
 
   return customFetch<getOrdersIdResponse>(getGetOrdersIdUrl(id),
   {
@@ -354,49 +356,78 @@ export const getOrdersId = async (id: string, options?: RequestInit): Promise<ge
 
 
 
-export const getGetOrdersIdMutationOptions = <TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getOrdersId>>, TError,GetOrdersIdMutationVariables, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof getOrdersId>>, TError,GetOrdersIdMutationVariables, TContext> => {
-
-const mutationKey = ['getOrdersId'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof getOrdersId>>, GetOrdersIdMutationVariables> = (props) => {
-          const {id} = props ?? {};
-
-          return  getOrdersId(id,)
-        }
-
-
-
-
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type GetOrdersIdMutationResult = NonNullable<Awaited<ReturnType<typeof getOrdersId>>>
-
-    export type GetOrdersIdMutationError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503
-    export type GetOrdersIdMutationVariables = {id: string}
-
-    export const useGetOrdersId = <TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof getOrdersId>>, TError,GetOrdersIdMutationVariables, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof getOrdersId>>,
-        TError,
-        GetOrdersIdMutationVariables,
-        TContext
-      > => {
-      return useMutation(getGetOrdersIdMutationOptions(options), queryClient);
+export const getGetOrdersIdQueryKey = (id: string,) => {
+    return [
+    `/orders/${id}`
+    ] as const;
     }
-    export type postOrdersIdTransitionResponse200 = {
+
+
+export const getGetOrdersIdQueryOptions = <TData = Awaited<ReturnType<typeof getOrdersId>>, TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503>(id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOrdersIdQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOrdersId>>> = ({ signal }) => getOrdersId(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type GetOrdersIdQueryResult = NonNullable<Awaited<ReturnType<typeof getOrdersId>>>
+export type GetOrdersIdQueryError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503
+
+
+export function useGetOrdersId<TData = Awaited<ReturnType<typeof getOrdersId>>, TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503>(
+ id: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getOrdersId>>,
+          TError,
+          Awaited<ReturnType<typeof getOrdersId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOrdersId<TData = Awaited<ReturnType<typeof getOrdersId>>, TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof getOrdersId>>,
+          TError,
+          Awaited<ReturnType<typeof getOrdersId>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useGetOrdersId<TData = Awaited<ReturnType<typeof getOrdersId>>, TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useGetOrdersId<TData = Awaited<ReturnType<typeof getOrdersId>>, TError = GetOrdersId400 | GetOrdersId404 | GetOrdersId409 | GetOrdersId422 | GetOrdersId503>(
+ id: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getOrdersId>>, TError, TData>>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getGetOrdersIdQueryOptions(id,options)
+
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+export type postOrdersIdTransitionResponse200 = {
   data: PostOrdersIdTransition200
   status: 200
 }
@@ -444,7 +475,7 @@ export const getPostOrdersIdTransitionUrl = (id: string,) => {
 }
 
 export const postOrdersIdTransition = async (id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: RequestInit): Promise<postOrdersIdTransitionResponse> => {
+    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: Parameters<typeof customFetch>[1]): Promise<postOrdersIdTransitionResponse> => {
 
     const getHeaders = (h?: NonNullable<RequestInit['headers']>): Record<string, string | readonly string[]> => {
     if (!h) return {};
@@ -465,80 +496,45 @@ return customFetch<postOrdersIdTransitionResponse>(getPostOrdersIdTransitionUrl(
 
 
 
-export const getPostOrdersIdTransitionQueryKey = (id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody,) => {
-    return [
-    'POST', `/orders/${id}/transition`, postOrdersIdTransitionBody
-    ] as const;
+export const getPostOrdersIdTransitionMutationOptions = <TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError,PostOrdersIdTransitionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError,PostOrdersIdTransitionMutationVariables, TContext> => {
+
+const mutationKey = ['postOrdersIdTransition'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postOrdersIdTransition>>, PostOrdersIdTransitionMutationVariables> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  postOrdersIdTransition(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostOrdersIdTransitionMutationResult = NonNullable<Awaited<ReturnType<typeof postOrdersIdTransition>>>
+    export type PostOrdersIdTransitionMutationBody = PostOrdersIdTransitionBody | undefined
+    export type PostOrdersIdTransitionMutationError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503
+    export type PostOrdersIdTransitionMutationVariables = {id: string;data?: PostOrdersIdTransitionBody}
+
+    export const usePostOrdersIdTransition = <TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError,PostOrdersIdTransitionMutationVariables, TContext>, request?: SecondParameter<typeof customFetch>}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postOrdersIdTransition>>,
+        TError,
+        PostOrdersIdTransitionMutationVariables,
+        TContext
+      > => {
+      return useMutation(getPostOrdersIdTransitionMutationOptions(options), queryClient);
     }
-
-
-export const getPostOrdersIdTransitionQueryOptions = <TData = Awaited<ReturnType<typeof postOrdersIdTransition>>, TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503>(id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getPostOrdersIdTransitionQueryKey(id,postOrdersIdTransitionBody);
-
-
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof postOrdersIdTransition>>> = ({ signal }) => postOrdersIdTransition(id,postOrdersIdTransitionBody, { signal });
-
-
-
-
-
-   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type PostOrdersIdTransitionQueryResult = NonNullable<Awaited<ReturnType<typeof postOrdersIdTransition>>>
-export type PostOrdersIdTransitionQueryError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503
-
-
-export function usePostOrdersIdTransition<TData = Awaited<ReturnType<typeof postOrdersIdTransition>>, TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503>(
- id: string,
-    postOrdersIdTransitionBody: undefined |  PostOrdersIdTransitionBody, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postOrdersIdTransition>>,
-          TError,
-          Awaited<ReturnType<typeof postOrdersIdTransition>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostOrdersIdTransition<TData = Awaited<ReturnType<typeof postOrdersIdTransition>>, TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503>(
- id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof postOrdersIdTransition>>,
-          TError,
-          Awaited<ReturnType<typeof postOrdersIdTransition>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function usePostOrdersIdTransition<TData = Awaited<ReturnType<typeof postOrdersIdTransition>>, TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503>(
- id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function usePostOrdersIdTransition<TData = Awaited<ReturnType<typeof postOrdersIdTransition>>, TError = PostOrdersIdTransition400 | PostOrdersIdTransition404 | PostOrdersIdTransition409 | PostOrdersIdTransition422 | PostOrdersIdTransition503>(
- id: string,
-    postOrdersIdTransitionBody?: PostOrdersIdTransitionBody, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof postOrdersIdTransition>>, TError, TData>>, }
- , queryClient?: QueryClient
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getPostOrdersIdTransitionQueryOptions(id,postOrdersIdTransitionBody,options)
-
-  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  return withQueryKey(query, queryOptions.queryKey);
-}
-
-
-
-
-
-

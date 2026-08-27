@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetSettings200OpeningHours } from './getSettings200OpeningHours.js';
+import type { GetSettings200OpeningHours } from './getSettings200OpeningHours';
 
 export type GetSettings200 = {
   id: string;

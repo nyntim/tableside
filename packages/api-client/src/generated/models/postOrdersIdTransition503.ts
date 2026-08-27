@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostOrdersIdTransition503Error } from './postOrdersIdTransition503Error.js';
+import type { PostOrdersIdTransition503Error } from './postOrdersIdTransition503Error';
 
 export type PostOrdersIdTransition503 = {
   error: PostOrdersIdTransition503Error;

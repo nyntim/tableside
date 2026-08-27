@@ -5,8 +5,8 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetCustomers200DataItem } from './getCustomers200DataItem.js';
-import type { GetCustomers200Meta } from './getCustomers200Meta.js';
+import type { GetCustomers200DataItem } from './getCustomers200DataItem';
+import type { GetCustomers200Meta } from './getCustomers200Meta';
 
 export type GetCustomers200 = {
   data: GetCustomers200DataItem[];

@@ -29,15 +29,13 @@ function buildUrl(path: string, params?: FetchConfig['params']) {
   return url.toString();
 }
 
-export async function customFetch<T>(config: FetchConfig): Promise<T> {
-  const { url, params, headers, body, ...rest } = config;
-  const response = await fetch(buildUrl(url, params), {
-    ...rest,
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const response = await fetch(buildUrl(path), {
+    ...init,
     headers: {
       'Content-Type': 'application/json',
-      ...headers,
+      ...init?.headers,
     },
-    body: body ?? undefined,
   });
 
   if (!response.ok) {
@@ -61,6 +59,22 @@ export async function customFetch<T>(config: FetchConfig): Promise<T> {
   }
 
   return response.json() as Promise<T>;
+}
+
+/** Orval mutator entrypoint (url + RequestInit). */
+export async function customFetch<T>(url: string, init?: RequestInit): Promise<T> {
+  return request<T>(url, init);
+}
+
+/** Legacy config-style helper for manual calls. */
+export async function fetchApi<T>(config: FetchConfig): Promise<T> {
+  const { url, params, headers, body, ...rest } = config;
+  const builtUrl = buildUrl(url, params);
+  return request<T>(builtUrl.replace(API_BASE_URL, ''), {
+    ...rest,
+    headers,
+    body: body ?? undefined,
+  });
 }
 
 export { API_BASE_URL };

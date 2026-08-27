@@ -8,7 +8,7 @@ import {
   orderStatusEvents,
   type OrderAction,
   type OrderStatus,
-} from '@odyssey/db';
+} from './schema/index.js';
 import { createDb } from './client.js';
 function generateOrderNumber(): string {
   const now = new Date();
@@ -235,7 +235,7 @@ async function main() {
 
       let current: OrderStatus = 'pending';
       while (current !== status && statusFlow[current]) {
-        const next = statusFlow[current]!;
+        const next: OrderStatus = statusFlow[current]!;
         if (status === 'cancelled' && next !== 'cancelled') {
           timeline.push({
             fromStatus: current,

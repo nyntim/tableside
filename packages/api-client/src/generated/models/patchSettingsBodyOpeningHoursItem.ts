@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchSettingsBodyOpeningHoursItemDay } from './patchSettingsBodyOpeningHoursItemDay.js';
+import type { PatchSettingsBodyOpeningHoursItemDay } from './patchSettingsBodyOpeningHoursItemDay';
 
 export type PatchSettingsBodyOpeningHoursItem = {
   day: PatchSettingsBodyOpeningHoursItemDay;

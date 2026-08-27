@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Odyssey Ops",
+    "slug": "odyssey-ops",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "odyssey-ops",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

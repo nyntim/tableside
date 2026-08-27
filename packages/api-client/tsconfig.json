@@ -1,8 +1,7 @@
 {
-  "extends": "@odyssey/tsconfig/node.json",
+  "extends": "@odyssey/tsconfig/base.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": ".",
     "jsx": "react-jsx"
   },
   "include": ["src/**/*", "orval.config.ts"]

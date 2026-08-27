@@ -7,7 +7,7 @@
     "dev": "wrangler dev --port 8799",
     "typecheck": "tsc --noEmit",
     "lint": "echo 'lint backend'",
-    "test": "vitest run",
+    "test": "vitest run --config vitest.config.ts && vitest run --config vitest.smoke.config.ts",
     "gen:openapi": "tsx scripts/generate-openapi.ts"
   },
   "dependencies": {

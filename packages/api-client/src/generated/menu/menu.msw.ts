@@ -33,9 +33,9 @@ import {
   getPatchMenuItemsIdResponseMock,
   getPostMenuCategoriesResponseMock,
   getPostMenuItemsResponseMock
-} from './menu.faker.js';
+} from './menu.faker';
 
-export { getGetMenuCategoriesResponseMock, getPostMenuCategoriesResponseMock, getPatchMenuCategoriesIdResponseMock, getDeleteMenuCategoriesIdResponseMock, getGetMenuItemsResponseMock, getPostMenuItemsResponseMock, getPatchMenuItemsIdResponseMock, getDeleteMenuItemsIdResponseMock } from './menu.faker.js';
+export { getGetMenuCategoriesResponseMock, getPostMenuCategoriesResponseMock, getPatchMenuCategoriesIdResponseMock, getDeleteMenuCategoriesIdResponseMock, getGetMenuItemsResponseMock, getPostMenuItemsResponseMock, getPatchMenuItemsIdResponseMock, getDeleteMenuItemsIdResponseMock } from './menu.faker';
 
 
 export const getGetMenuCategoriesMockHandler = (overrideResponse?: GetMenuCategories200Item[] | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetMenuCategories200Item[]> | GetMenuCategories200Item[]), options?: RequestHandlerOptions) => {

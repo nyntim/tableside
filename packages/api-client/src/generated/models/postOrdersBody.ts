@@ -5,8 +5,8 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostOrdersBodyFulfillmentType } from './postOrdersBodyFulfillmentType.js';
-import type { PostOrdersBodyItemsItem } from './postOrdersBodyItemsItem.js';
+import type { PostOrdersBodyFulfillmentType } from './postOrdersBodyFulfillmentType';
+import type { PostOrdersBodyItemsItem } from './postOrdersBodyItemsItem';
 
 export type PostOrdersBody = {
   customerId: string;

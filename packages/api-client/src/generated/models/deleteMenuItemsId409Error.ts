@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { DeleteMenuItemsId409ErrorDetails } from './deleteMenuItemsId409ErrorDetails.js';
+import type { DeleteMenuItemsId409ErrorDetails } from './deleteMenuItemsId409ErrorDetails';
 
 export type DeleteMenuItemsId409Error = {
   code: string;

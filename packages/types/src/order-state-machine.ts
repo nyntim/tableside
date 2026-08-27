@@ -81,8 +81,8 @@ export function actionRequiresReason(action: OrderAction): boolean {
 
 export function getStatusTimestampField(
   status: OrderStatus,
-): keyof typeof STATUS_TIMESTAMP_FIELDS | null {
-  return STATUS_TIMESTAMP_FIELDS[status] ?? null;
+): (typeof STATUS_TIMESTAMP_FIELDS)[keyof typeof STATUS_TIMESTAMP_FIELDS] | null {
+  return STATUS_TIMESTAMP_FIELDS[status as keyof typeof STATUS_TIMESTAMP_FIELDS] ?? null;
 }
 
 const STATUS_TIMESTAMP_FIELDS = {

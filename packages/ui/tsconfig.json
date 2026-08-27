@@ -2,6 +2,7 @@
   "extends": "@odyssey/tsconfig/react-native.json",
   "compilerOptions": {
     "noEmit": true,
+    "noUnusedLocals": false,
     "rootDir": "src"
   },
   "include": ["src/**/*"]

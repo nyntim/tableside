@@ -1,9 +1,9 @@
 {
-  "extends": "@odyssey/tsconfig/node.json",
+  "extends": "@odyssey/tsconfig/base.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": ".",
-    "types": ["@cloudflare/workers-types"]
+    "noUnusedLocals": false,
+    "types": ["@cloudflare/workers-types", "node"]
   },
-  "include": ["src/**/*", "scripts/**/*"]
+  "include": ["src/app.ts", "src/index.ts", "src/lib/**/*", "src/routes/**/*", "src/services/**/*", "src/types.ts"]
 }

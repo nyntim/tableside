@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchSettings409ErrorDetails } from './patchSettings409ErrorDetails.js';
+import type { PatchSettings409ErrorDetails } from './patchSettings409ErrorDetails';
 
 export type PatchSettings409Error = {
   code: string;

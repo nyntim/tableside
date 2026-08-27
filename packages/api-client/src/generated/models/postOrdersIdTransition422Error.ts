@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostOrdersIdTransition422ErrorDetails } from './postOrdersIdTransition422ErrorDetails.js';
+import type { PostOrdersIdTransition422ErrorDetails } from './postOrdersIdTransition422ErrorDetails';
 
 export type PostOrdersIdTransition422Error = {
   code: string;

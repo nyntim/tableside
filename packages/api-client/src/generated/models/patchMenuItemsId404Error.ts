@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PatchMenuItemsId404ErrorDetails } from './patchMenuItemsId404ErrorDetails.js';
+import type { PatchMenuItemsId404ErrorDetails } from './patchMenuItemsId404ErrorDetails';
 
 export type PatchMenuItemsId404Error = {
   code: string;

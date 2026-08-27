@@ -1,8 +1,8 @@
 {
-  "extends": "@odyssey/tsconfig/node.json",
+  "extends": "@odyssey/tsconfig/base.json",
   "compilerOptions": {
     "noEmit": true,
     "rootDir": "src"
   },
-  "include": ["src/**/*", "drizzle.config.ts"]
+  "include": ["src/**/*"]
 }

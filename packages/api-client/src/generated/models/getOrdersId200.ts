@@ -5,12 +5,12 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetOrdersId200AllowedActionsItem } from './getOrdersId200AllowedActionsItem.js';
-import type { GetOrdersId200Customer } from './getOrdersId200Customer.js';
-import type { GetOrdersId200FulfillmentType } from './getOrdersId200FulfillmentType.js';
-import type { GetOrdersId200ItemsItem } from './getOrdersId200ItemsItem.js';
-import type { GetOrdersId200Status } from './getOrdersId200Status.js';
-import type { GetOrdersId200TimelineItem } from './getOrdersId200TimelineItem.js';
+import type { GetOrdersId200AllowedActionsItem } from './getOrdersId200AllowedActionsItem';
+import type { GetOrdersId200Customer } from './getOrdersId200Customer';
+import type { GetOrdersId200FulfillmentType } from './getOrdersId200FulfillmentType';
+import type { GetOrdersId200ItemsItem } from './getOrdersId200ItemsItem';
+import type { GetOrdersId200Status } from './getOrdersId200Status';
+import type { GetOrdersId200TimelineItem } from './getOrdersId200TimelineItem';
 
 export type GetOrdersId200 = {
   id: string;

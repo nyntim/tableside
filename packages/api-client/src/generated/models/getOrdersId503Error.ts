@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { GetOrdersId503ErrorDetails } from './getOrdersId503ErrorDetails.js';
+import type { GetOrdersId503ErrorDetails } from './getOrdersId503ErrorDetails';
 
 export type GetOrdersId503Error = {
   code: string;

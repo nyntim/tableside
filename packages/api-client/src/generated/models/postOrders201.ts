@@ -5,12 +5,12 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostOrders201AllowedActionsItem } from './postOrders201AllowedActionsItem.js';
-import type { PostOrders201Customer } from './postOrders201Customer.js';
-import type { PostOrders201FulfillmentType } from './postOrders201FulfillmentType.js';
-import type { PostOrders201ItemsItem } from './postOrders201ItemsItem.js';
-import type { PostOrders201Status } from './postOrders201Status.js';
-import type { PostOrders201TimelineItem } from './postOrders201TimelineItem.js';
+import type { PostOrders201AllowedActionsItem } from './postOrders201AllowedActionsItem';
+import type { PostOrders201Customer } from './postOrders201Customer';
+import type { PostOrders201FulfillmentType } from './postOrders201FulfillmentType';
+import type { PostOrders201ItemsItem } from './postOrders201ItemsItem';
+import type { PostOrders201Status } from './postOrders201Status';
+import type { PostOrders201TimelineItem } from './postOrders201TimelineItem';
 
 export type PostOrders201 = {
   id: string;

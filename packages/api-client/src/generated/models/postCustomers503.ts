@@ -5,7 +5,7 @@
  * Restaurant operations API for Odyssey assignment
  * OpenAPI spec version: 1.0.0
  */
-import type { PostCustomers503Error } from './postCustomers503Error.js';
+import type { PostCustomers503Error } from './postCustomers503Error';
 
 export type PostCustomers503 = {
   error: PostCustomers503Error;

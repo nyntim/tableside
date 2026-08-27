@@ -19,9 +19,9 @@ import type {
 
 import {
   getGetMetricsSummaryResponseMock
-} from './metrics.faker.js';
+} from './metrics.faker';
 
-export { getGetMetricsSummaryResponseMock } from './metrics.faker.js';
+export { getGetMetricsSummaryResponseMock } from './metrics.faker';
 
 
 export const getGetMetricsSummaryMockHandler = (overrideResponse?: GetMetricsSummary200 | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<GetMetricsSummary200> | GetMetricsSummary200), options?: RequestHandlerOptions) => {
