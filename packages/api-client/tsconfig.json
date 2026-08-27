@@ -1,0 +1,9 @@
+{
+  "extends": "@odyssey/tsconfig/node.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "jsx": "react-jsx"
+  },
+  "include": ["src/**/*", "orval.config.ts"]
+}

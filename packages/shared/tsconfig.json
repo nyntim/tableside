@@ -1,0 +1,8 @@
+{
+  "extends": "@odyssey/tsconfig/node.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"]
+}
