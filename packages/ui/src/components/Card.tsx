@@ -1,6 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { radius, shadows, spacing, typography } from '../theme/tokens';
+import { radius, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type CardProps = {
@@ -21,8 +21,7 @@ export function Card({ title, subtitle, children, onPress, footer, style }: Card
       onPress={onPress}
       style={[
         styles.card,
-        shadows.sm,
-        { backgroundColor: colors.surface, borderColor: colors.border },
+        { backgroundColor: colors.surface },
         style,
       ]}
     >
@@ -47,7 +46,6 @@ export function Card({ title, subtitle, children, onPress, footer, style }: Card
 const styles = StyleSheet.create({
   card: {
     borderRadius: radius.lg,
-    borderWidth: 1,
     overflow: 'hidden',
   },
   header: {

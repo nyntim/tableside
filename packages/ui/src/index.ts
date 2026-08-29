@@ -17,3 +17,5 @@ export * from './components/Toast';
 export * from './components/Nav';
 export * from './components/StatCard';
 export * from './components/MoneyText';
+export * from './components/Timeline';
+export * from './components/Sparkline';

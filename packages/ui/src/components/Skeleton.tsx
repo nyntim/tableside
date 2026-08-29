@@ -33,7 +33,7 @@ export function Skeleton({ width = '100%', height = 16, borderRadius = radius.sm
           width,
           height,
           borderRadius,
-          backgroundColor: colors.surfaceMuted,
+          backgroundColor: colors.border,
           opacity,
         },
         style,

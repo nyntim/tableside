@@ -9,8 +9,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { radius, shadows, spacing, typography } from '../theme/tokens';
-import { useResponsive } from '../hooks';
+import { palette, shadows, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type DrawerProps = {
@@ -24,12 +23,11 @@ export type DrawerProps = {
 
 export function Drawer({ visible, title, onClose, children, width = 400, style }: DrawerProps) {
   const { colors } = useTheme();
-  const { isDesktop } = useResponsive();
 
   return (
-    <Modal animationType="slide" transparent visible={visible} onRequestClose={onClose}>
-      <View style={styles.overlay}>
-        <Pressable style={styles.backdrop} onPress={onClose} />
+    <Modal animationType="fade" transparent visible={visible} onRequestClose={onClose}>
+      <View style={styles.overlay} pointerEvents="box-none">
+        <Pressable style={[styles.backdrop, { backgroundColor: palette.overlay }]} onPress={onClose} />
         <View
           style={[
             styles.panel,
@@ -37,10 +35,9 @@ export function Drawer({ visible, title, onClose, children, width = 400, style }
             {
               backgroundColor: colors.surface,
               borderColor: colors.border,
-              width: isDesktop ? width : '100%',
+              width,
               maxWidth: '100%',
             },
-            !isDesktop && styles.panelMobile,
             style,
           ]}
         >
@@ -54,7 +51,9 @@ export function Drawer({ visible, title, onClose, children, width = 400, style }
               <Text style={[typography.lg, { color: colors.textMuted }]}>✕</Text>
             </Pressable>
           </View>
-          <ScrollView contentContainerStyle={styles.content}>{children}</ScrollView>
+          <ScrollView style={styles.body} contentContainerStyle={styles.content}>
+            {children}
+          </ScrollView>
         </View>
       </View>
     </Modal>
@@ -63,25 +62,17 @@ export function Drawer({ visible, title, onClose, children, width = 400, style }
 
 const styles = StyleSheet.create({
   overlay: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    ...StyleSheet.absoluteFillObject,
   },
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
   },
   panel: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
     borderLeftWidth: 1,
-    height: '100%',
-  },
-  panelMobile: {
-    borderTopLeftRadius: radius.xl,
-    borderTopRightRadius: radius.xl,
-    marginTop: 'auto',
-    maxHeight: '90%',
-    borderLeftWidth: 0,
-    borderTopWidth: 1,
   },
   header: {
     flexDirection: 'row',
@@ -90,8 +81,12 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[4],
     borderBottomWidth: 1,
   },
+  body: {
+    flex: 1,
+  },
   content: {
     padding: spacing[4],
     gap: spacing[4],
+    flexGrow: 1,
   },
 });

@@ -1,18 +1,25 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { statusColors, typography } from '../theme/tokens';
+import { radius, spacing, statusColors, typography } from '../theme/tokens';
 import { getStatusLabel } from '@tableside/shared';
+import { useTheme } from '../theme/ThemeProvider';
 
 export type StatusBadgeProps = {
   status: string;
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {
-  const colors = statusColors[status] ?? { bg: '#e2e8f0', text: '#475569' };
+  const { colors: themeColors } = useTheme();
+  const colors = statusColors[status] ?? { bg: themeColors.surfaceMuted, text: themeColors.textMuted };
   const label = getStatusLabel(status as Parameters<typeof getStatusLabel>[0]);
 
   return (
-    <View style={[styles.badge, { backgroundColor: colors.bg }]}>
+    <View
+      style={[
+        styles.badge,
+        { backgroundColor: colors.bg, borderColor: themeColors.border },
+      ]}
+    >
       <Text style={[typography.xs, { color: colors.text, fontWeight: '600' }]}>{label}</Text>
     </View>
   );
@@ -21,8 +28,9 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 const styles = StyleSheet.create({
   badge: {
     alignSelf: 'flex-start',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 999,
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[1],
+    borderRadius: radius.full,
+    borderWidth: 1,
   },
 });

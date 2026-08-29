@@ -9,7 +9,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { radius, spacing, typography } from '../theme/tokens';
+import { palette, radius, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type SelectOption<T extends string = string> = {
@@ -69,7 +69,7 @@ export function Select<T extends string = string>({
       ) : null}
 
       <Modal animationType="fade" transparent visible={open} onRequestClose={() => setOpen(false)}>
-        <Pressable style={styles.overlay} onPress={() => setOpen(false)}>
+        <Pressable style={[styles.overlay, { backgroundColor: palette.overlay }]} onPress={() => setOpen(false)}>
           <View style={[styles.sheet, { backgroundColor: colors.surface, borderColor: colors.border }]}>
             <ScrollView>
               {options.map((option) => (
@@ -81,7 +81,7 @@ export function Select<T extends string = string>({
                   }}
                   style={[
                     styles.option,
-                    option.value === value && { backgroundColor: colors.surfaceMuted },
+                    option.value === value && { backgroundColor: colors.surfaceHover },
                   ]}
                 >
                   <Text style={[typography.base, { color: colors.text }]}>{option.label}</Text>
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
     justifyContent: 'center',
     padding: spacing[6],
   },

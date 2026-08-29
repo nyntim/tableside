@@ -1,7 +1,7 @@
 import React from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { spacing, typography } from '../theme/tokens';
-import { useResponsive } from '../hooks';
+import { Pressable, ScrollView, StyleSheet, Text, View, type ViewStyle } from 'react-native';
+import { palette, radius, spacing, typography } from '../theme/tokens';
+import { useInteractionState, useResponsive } from '../hooks';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type NavItem = {
@@ -19,6 +19,78 @@ export type NavProps = {
   footer?: React.ReactNode;
 };
 
+function focusRing(color: string, focused: boolean): ViewStyle | undefined {
+  if (!focused) return undefined;
+  return {
+    borderColor: color,
+    outlineWidth: 2,
+    outlineColor: color,
+    outlineStyle: 'solid',
+    outlineOffset: 2,
+  };
+}
+
+function SidebarNavItem({ item }: { item: NavItem }) {
+  const { colors } = useTheme();
+  const { hovered, focused, handlers } = useInteractionState();
+
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityState={{ selected: !!item.active }}
+      onPress={item.onPress}
+      style={[
+        styles.navItem,
+        item.active && { backgroundColor: colors.surface },
+        hovered && !item.active && { backgroundColor: colors.surfaceHover },
+        focusRing(colors.primary, focused),
+      ]}
+      {...handlers}
+    >
+      <Text style={{ fontSize: 16, width: 24 }}>{item.icon ?? '•'}</Text>
+      <Text
+        style={[
+          typography.sm,
+          {
+            color: item.active ? colors.primary : colors.text,
+            fontWeight: item.active ? '600' : '400',
+          },
+        ]}
+      >
+        {item.label}
+      </Text>
+    </Pressable>
+  );
+}
+
+function TabNavItem({ item }: { item: NavItem }) {
+  const { colors } = useTheme();
+  const { focused, handlers } = useInteractionState();
+
+  return (
+    <Pressable
+      accessibilityRole="tab"
+      accessibilityState={{ selected: !!item.active }}
+      onPress={item.onPress}
+      style={[styles.tabItem, focusRing(colors.primary, focused)]}
+      {...handlers}
+    >
+      <Text style={{ fontSize: 18 }}>{item.icon ?? '•'}</Text>
+      <Text
+        style={[
+          typography.xs,
+          {
+            color: item.active ? colors.primary : colors.textMuted,
+            fontWeight: item.active ? '600' : '400',
+          },
+        ]}
+      >
+        {item.label}
+      </Text>
+    </Pressable>
+  );
+}
+
 export function Nav({ items, header, footer }: NavProps) {
   const { colors } = useTheme();
   const { isDesktop } = useResponsive();
@@ -27,51 +99,18 @@ export function Nav({ items, header, footer }: NavProps) {
     return (
       <View style={[styles.tabBar, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
         {items.slice(0, 5).map((item) => (
-          <Pressable key={item.key} onPress={item.onPress} style={styles.tabItem}>
-            <Text style={{ fontSize: 18 }}>{item.icon ?? '•'}</Text>
-            <Text
-              style={[
-                typography.xs,
-                {
-                  color: item.active ? colors.primary : colors.textMuted,
-                  fontWeight: item.active ? '600' : '400',
-                },
-              ]}
-            >
-              {item.label}
-            </Text>
-          </Pressable>
+          <TabNavItem key={item.key} item={item} />
         ))}
       </View>
     );
   }
 
   return (
-    <View style={[styles.sidebar, { backgroundColor: colors.surface, borderRightColor: colors.border }]}>
+    <View style={[styles.sidebar, { backgroundColor: palette.sidebar, borderRightColor: colors.border }]}>
       {header ? <View style={styles.header}>{header}</View> : null}
       <ScrollView contentContainerStyle={styles.navItems}>
         {items.map((item) => (
-          <Pressable
-            key={item.key}
-            onPress={item.onPress}
-            style={[
-              styles.navItem,
-              item.active && { backgroundColor: colors.surfaceMuted },
-            ]}
-          >
-            <Text style={{ fontSize: 16, width: 24 }}>{item.icon ?? '•'}</Text>
-            <Text
-              style={[
-                typography.sm,
-                {
-                  color: item.active ? colors.primary : colors.text,
-                  fontWeight: item.active ? '600' : '400',
-                },
-              ]}
-            >
-              {item.label}
-            </Text>
-          </Pressable>
+          <SidebarNavItem key={item.key} item={item} />
         ))}
       </ScrollView>
       {footer ? <View style={styles.footer}>{footer}</View> : null}
@@ -81,7 +120,7 @@ export function Nav({ items, header, footer }: NavProps) {
 
 const styles = StyleSheet.create({
   sidebar: {
-    width: 240,
+    width: 208,
     borderRightWidth: 1,
     height: '100%',
   },
@@ -98,7 +137,10 @@ const styles = StyleSheet.create({
     gap: spacing[3],
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[2],
-    borderRadius: 8,
+    borderRadius: radius.md,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    outlineWidth: 0,
   },
   footer: {
     marginTop: 'auto',
@@ -114,5 +156,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     gap: spacing[1],
+    borderRadius: radius.md,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    outlineWidth: 0,
   },
 });

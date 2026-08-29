@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
-import { radius, spacing, typography } from '../theme/tokens';
+import { palette, radius, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 
-export type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info';
+export type BadgeVariant = 'default' | 'neutral' | 'success' | 'warning' | 'error' | 'info' | 'outline';
 
 export type BadgeProps = {
   label: string;
@@ -16,7 +16,17 @@ export function Badge({ label, variant = 'default', style }: BadgeProps) {
   const variantColors = getVariantColors(colors, variant);
 
   return (
-    <View style={[styles.badge, { backgroundColor: variantColors.bg }, style]}>
+    <View
+      style={[
+        styles.badge,
+        {
+          backgroundColor: variantColors.bg,
+          borderColor: variantColors.border,
+          borderWidth: variantColors.border === 'transparent' ? 0 : 1,
+        },
+        style,
+      ]}
+    >
       <Text style={[typography.xs, { color: variantColors.text, fontWeight: '600' }]}>{label}</Text>
     </View>
   );
@@ -28,15 +38,17 @@ function getVariantColors(
 ) {
   switch (variant) {
     case 'success':
-      return { bg: '#dcfce7', text: colors.success };
+      return { bg: colors.success, text: palette.sidebar, border: 'transparent' };
     case 'warning':
-      return { bg: '#fef3c7', text: '#92400e' };
+      return { bg: colors.warning, text: palette.sidebar, border: 'transparent' };
     case 'error':
-      return { bg: '#fee2e2', text: colors.error };
+      return { bg: colors.error, text: colors.text, border: 'transparent' };
     case 'info':
-      return { bg: '#dbeafe', text: colors.info };
+      return { bg: colors.info, text: palette.sidebar, border: 'transparent' };
+    case 'outline':
+      return { bg: 'transparent', text: colors.textMuted, border: colors.border };
     default:
-      return { bg: colors.surfaceMuted, text: colors.textMuted };
+      return { bg: colors.surface, text: colors.textMuted, border: colors.border };
   }
 }
 

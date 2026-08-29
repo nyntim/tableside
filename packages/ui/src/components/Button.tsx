@@ -10,7 +10,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { useInteractionState } from '../hooks';
-import { radius, spacing, typography } from '../theme/tokens';
+import { palette, radius, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -55,7 +55,7 @@ export function Button({
         sizeStyles.container,
         variantStyles.container,
         fullWidth && styles.fullWidth,
-        focused && { borderColor: colors.info, borderWidth: 2 },
+        focused && { borderColor: colors.primary, borderWidth: 2 },
         style,
       ]}
       {...handlers}
@@ -86,7 +86,7 @@ function getVariantStyles(
     case 'secondary':
       return {
         container: {
-          backgroundColor: hovered || pressed ? colors.surfaceMuted : colors.surface,
+          backgroundColor: hovered || pressed ? colors.surfaceHover : colors.surface,
           borderColor: colors.border,
           borderWidth: 1,
         },
@@ -95,16 +95,16 @@ function getVariantStyles(
     case 'ghost':
       return {
         container: {
-          backgroundColor: hovered || pressed ? colors.surfaceMuted : 'transparent',
+          backgroundColor: hovered || pressed ? colors.surfaceHover : 'transparent',
         },
         textColor: colors.text,
       };
     case 'danger':
       return {
         container: {
-          backgroundColor: pressed ? colors.error : hovered ? '#b91c1c' : colors.error,
+          backgroundColor: pressed || hovered ? palette.error : colors.error,
         },
-        textColor: colors.textInverse,
+        textColor: colors.text,
       };
     default:
       return {
@@ -133,7 +133,7 @@ const SIZE_STYLES = {
 
 const styles = StyleSheet.create({
   base: {
-    borderRadius: radius.md,
+    borderRadius: radius.full,
     alignItems: 'center',
     justifyContent: 'center',
   },

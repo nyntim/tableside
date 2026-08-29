@@ -7,7 +7,7 @@ import {
   View,
   type ModalProps as RNModalProps,
 } from 'react-native';
-import { radius, shadows, spacing, typography } from '../theme/tokens';
+import { palette, radius, shadows, spacing, typography } from '../theme/tokens';
 import { useTheme } from '../theme/ThemeProvider';
 import { Button } from './Button';
 
@@ -36,7 +36,7 @@ export function Modal({
 
   return (
     <RNModal animationType="fade" transparent visible={visible} onRequestClose={onRequestClose}>
-      <Pressable style={styles.overlay} onPress={onRequestClose}>
+      <Pressable style={[styles.overlay, { backgroundColor: palette.overlay }]} onPress={onRequestClose}>
         <Pressable
           style={[
             styles.content,
@@ -62,7 +62,6 @@ export function Modal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing[6],

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -20,6 +20,7 @@ export type InputProps = TextInputProps & {
 
 export function Input({ label, error, hint, containerStyle, style, ...rest }: InputProps) {
   const { colors } = useTheme();
+  const [focused, setFocused] = useState(false);
 
   return (
     <View style={[styles.container, containerStyle]}>
@@ -33,12 +34,22 @@ export function Input({ label, error, hint, containerStyle, style, ...rest }: In
           typography.base,
           {
             backgroundColor: colors.surface,
-            borderColor: error ? colors.error : colors.border,
+            borderColor: error ? colors.error : focused ? colors.primary : colors.border,
+            borderWidth: focused ? 2 : 1,
             color: colors.text,
+            opacity: rest.editable === false ? 0.55 : 1,
           },
           style,
         ]}
         {...rest}
+        onFocus={(event) => {
+          setFocused(true);
+          rest.onFocus?.(event);
+        }}
+        onBlur={(event) => {
+          setFocused(false);
+          rest.onBlur?.(event);
+        }}
       />
       {error ? (
         <Text style={[styles.hint, typography.xs, { color: colors.error }]}>{error}</Text>
