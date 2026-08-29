@@ -6,7 +6,7 @@ import {
   Card,
   ErrorState,
   Input,
-  MoneyText,
+  Money,
   SkeletonGroup,
   spacing,
   typography,
@@ -64,7 +64,7 @@ export default function CustomerDetailScreen() {
 
       <Card title="Stats">
         <Text style={{ color: colors.textMuted }}>Orders: {customer.orderCount ?? 0}</Text>
-        <MoneyText cents={customer.totalSpendCents ?? 0} emphasize style={{ marginTop: spacing[2] }} />
+        <Money cents={customer.totalSpendCents ?? 0} emphasize style={{ marginTop: spacing[2] }} />
       </Card>
     </ScrollView>
   );
