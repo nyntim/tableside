@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   EmptyState,
   ErrorState,
   Input,
+  Modal,
   Money,
   Select,
   SkeletonGroup,
@@ -17,8 +18,18 @@ import {
   typography,
   useTheme,
 } from '@tableside/ui';
-import { formatRelativeDate, isDestructiveAction } from '@tableside/shared';
+import { formatRelativeDate } from '@tableside/shared';
 import {
+  FULFILLMENT_TYPES,
+  ORDER_STATUSES,
+  getFulfillmentLabel,
+  getStatusLabel,
+  isDestructiveAction,
+  type FulfillmentType,
+  calculateOrderTotals,
+} from '@tableside/types';
+import {
+  useCreateOrder,
   useOrderDetail,
   useOrdersList,
   type OrderListItem,
@@ -26,20 +37,24 @@ import {
 
 const STATUS_OPTIONS = [
   { label: 'All statuses', value: '' },
-  { label: 'Pending', value: 'pending' },
-  { label: 'Confirmed', value: 'confirmed' },
-  { label: 'Preparing', value: 'preparing' },
-  { label: 'Ready', value: 'ready' },
-  { label: 'Out for delivery', value: 'out_for_delivery' },
-  { label: 'Completed', value: 'completed' },
-  { label: 'Cancelled', value: 'cancelled' },
+  ...ORDER_STATUSES.map((status) => ({
+    label: getStatusLabel(status),
+    value: status,
+  })),
+];
+
+const CHANNEL_OPTIONS = [
+  { label: 'All channels', value: '' },
+  ...FULFILLMENT_TYPES.map((type) => ({
+    label: getFulfillmentLabel(type),
+    value: type,
+  })),
 ];
 
 export default function OrdersScreen() {
   const { colors } = useTheme();
   const [search, setSearch] = useState('');
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [density, setDensity] = useState<'comfortable' | 'compact'>('compact');
   const {
     orders,
     isLoading,
@@ -52,6 +67,8 @@ export default function OrdersScreen() {
     closeOrder,
     selectedOrderId,
     createOrder,
+    closeCreateOrder,
+    isCreatingOrder,
     exportOrders,
     filters,
     stats,
@@ -101,23 +118,11 @@ export default function OrdersScreen() {
         />
         <Select
           label="Channel"
-          options={[
-            { label: 'All channels', value: '' },
-            { label: 'Pickup', value: 'pickup' },
-            { label: 'Delivery', value: 'delivery' },
-            { label: 'Dine in', value: 'dine_in' },
-          ]}
+          options={CHANNEL_OPTIONS}
           value={filters.fulfillmentType ?? ''}
           onChange={(value) => setChannel(value || undefined)}
         />
-        <View style={styles.toolbarButtons}>
-          <Button
-            label={density === 'compact' ? '☷ Compact' : '☰ Comfortable'}
-            variant="ghost"
-            onPress={() => setDensity((current) => (current === 'compact' ? 'comfortable' : 'compact'))}
-          />
-          <Button label="Export" variant="secondary" onPress={exportOrders} />
-        </View>
+        <Button label="Export" variant="secondary" onPress={exportOrders} />
       </View>
 
       {isLoading ? (
@@ -163,7 +168,7 @@ export default function OrdersScreen() {
               flex: 1,
               render: (row) => <StatusBadge status={row.status} />,
             },
-              {
+            {
               key: 'total',
               header: 'Total',
               flex: 0.8,
@@ -195,14 +200,169 @@ export default function OrdersScreen() {
           keyExtractor={(row) => row.id}
         />
       )}
+      <CreateOrderDrawer
+        visible={isCreatingOrder}
+        onClose={closeCreateOrder}
+        onCreated={async (orderId) => {
+          closeCreateOrder();
+          await refetch();
+          openOrder(orderId);
+        }}
+      />
       <OrderDrawer orderId={selectedOrderId} onClose={closeOrder} />
     </ScrollView>
+  );
+}
+
+function CreateOrderDrawer({
+  visible,
+  onClose,
+  onCreated,
+}: {
+  visible: boolean;
+  onClose: () => void;
+  onCreated: (orderId: string) => void | Promise<void>;
+}) {
+  const { colors } = useTheme();
+  const {
+    submit,
+    isSubmitting,
+    customers,
+    menuItems,
+    settings,
+    isLoading,
+    isError,
+    refetch,
+  } = useCreateOrder();
+
+  const [customerId, setCustomerId] = useState('');
+  const [fulfillmentType, setFulfillmentType] = useState<FulfillmentType>('pickup');
+  const [menuItemId, setMenuItemId] = useState('');
+  const [quantity, setQuantity] = useState('1');
+  const [items, setItems] = useState<
+    Array<{ menuItemId: string; quantity: number; name: string; priceCents: number }>
+  >([]);
+
+  useEffect(() => {
+    if (!visible) {
+      setCustomerId('');
+      setFulfillmentType('pickup');
+      setMenuItemId('');
+      setQuantity('1');
+      setItems([]);
+    }
+  }, [visible]);
+
+  const customerOptions = useMemo(
+    () =>
+      customers.map((customer) => ({
+        label: customer.name,
+        value: customer.id,
+      })),
+    [customers],
+  );
+
+  const menuOptions = useMemo(
+    () =>
+      menuItems.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })),
+    [menuItems],
+  );
+
+  const subtotalCents = items.reduce((total, item) => total + item.priceCents * item.quantity, 0);
+  const totals = settings
+    ? calculateOrderTotals({
+        subtotalCents,
+        taxRateBps: settings.taxRateBps,
+        serviceFeeBps: settings.serviceFeeBps,
+        deliveryFeeCents: settings.deliveryFeeCents,
+        fulfillmentType,
+      })
+    : null;
+
+  const addItem = () => {
+    const menuItem = menuItems.find((item) => item.id === menuItemId);
+    const qty = Number(quantity);
+    if (!menuItem || !qty) return;
+    setItems((current) => [
+      ...current,
+      { menuItemId, quantity: qty, name: menuItem.name, priceCents: menuItem.priceCents },
+    ]);
+    setMenuItemId('');
+    setQuantity('1');
+  };
+
+  return (
+    <Drawer visible={visible} title="New order" onClose={onClose} width={480}>
+      {isError ? (
+        <ErrorState onRetry={refetch} />
+      ) : isLoading ? (
+        <SkeletonGroup count={6} />
+      ) : (
+        <>
+          <Select label="Customer" options={customerOptions} value={customerId} onChange={setCustomerId} />
+          <Select
+            label="Fulfillment"
+            options={FULFILLMENT_TYPES.map((type) => ({
+              label: getFulfillmentLabel(type),
+              value: type,
+            }))}
+            value={fulfillmentType}
+            onChange={(value) => setFulfillmentType(value as FulfillmentType)}
+          />
+          <Card title="Add items">
+            <Select label="Menu item" options={menuOptions} value={menuItemId} onChange={setMenuItemId} />
+            <Input label="Quantity" value={quantity} onChangeText={setQuantity} keyboardType="number-pad" />
+            <Button label="Add item" variant="secondary" onPress={addItem} />
+          </Card>
+          <Card title="Line items">
+            {items.length === 0 ? (
+              <Text style={{ color: colors.textMuted }}>No items added yet</Text>
+            ) : (
+              items.map((item, index) => (
+                <View key={`${item.menuItemId}-${index}`} style={styles.lineRow}>
+                  <Text style={{ color: colors.text, flex: 1 }}>
+                    {item.quantity}× {item.name}
+                  </Text>
+                  <Money cents={item.priceCents * item.quantity} size="small" />
+                </View>
+              ))
+            )}
+            {totals ? (
+              <View style={styles.totalRow}>
+                <Text style={[typography.lg, { color: colors.text, fontWeight: '700' }]}>Estimated total</Text>
+                <Money cents={totals.totalCents} emphasize />
+              </View>
+            ) : null}
+          </Card>
+          <Button
+            label="Create order"
+            loading={isSubmitting}
+            disabled={!customerId || items.length === 0}
+            onPress={async () => {
+              const created = await submit({
+                customerId,
+                fulfillmentType,
+                items: items.map(({ menuItemId: id, quantity: qty }) => ({ menuItemId: id, quantity: qty })),
+                expectedTotalCents: totals?.totalCents,
+              });
+              if (created?.id) await onCreated(created.id);
+            }}
+          />
+        </>
+      )}
+    </Drawer>
   );
 }
 
 function OrderDrawer({ orderId, onClose }: { orderId?: string; onClose: () => void }) {
   const { colors } = useTheme();
   const detail = useOrderDetail(orderId ?? '');
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const [reason, setReason] = useState('');
+  const needsReason = pendingAction === 'cancel' || pendingAction === 'reject';
 
   return (
     <Drawer visible={!!orderId} title={detail.order?.orderNumber ?? 'Order'} onClose={onClose} width={480}>
@@ -217,6 +377,9 @@ function OrderDrawer({ orderId, onClose }: { orderId?: string; onClose: () => vo
             <Money cents={detail.order.totalCents} emphasize />
           </View>
           <StatusBadge status={detail.order.status} />
+          <Text style={[typography.sm, { color: colors.textMuted }]}>
+            {getFulfillmentLabel(detail.order.fulfillmentType)} · {detail.order.customer.name}
+          </Text>
           <Card title="Timeline">
             <Timeline entries={detail.timelineEntries} />
           </Card>
@@ -244,10 +407,41 @@ function OrderDrawer({ orderId, onClose }: { orderId?: string; onClose: () => vo
                 label={label}
                 variant={isDestructiveAction(action) ? 'danger' : 'primary'}
                 loading={detail.isTransitioning}
-                onPress={() => detail.performTransition(action)}
+                onPress={() => setPendingAction(action)}
               />
             ))}
           </View>
+          <Modal
+            visible={!!pendingAction}
+            title={`Confirm ${pendingAction?.replaceAll('_', ' ') ?? ''}`}
+            onRequestClose={() => {
+              setPendingAction(null);
+              setReason('');
+            }}
+            onCancel={() => {
+              setPendingAction(null);
+              setReason('');
+            }}
+            onConfirm={async () => {
+              if (!pendingAction) return;
+              await detail.performTransition(pendingAction, reason || undefined);
+              setPendingAction(null);
+              setReason('');
+            }}
+            loading={detail.isTransitioning}
+            confirmLabel="Apply"
+          >
+            {needsReason ? (
+              <Input
+                label="Reason"
+                value={reason}
+                onChangeText={setReason}
+                placeholder="Required for cancel/reject"
+              />
+            ) : (
+              <Text style={{ color: colors.textMuted }}>Apply this transition to the order?</Text>
+            )}
+          </Modal>
         </>
       )}
     </Drawer>
@@ -274,12 +468,22 @@ const styles = StyleSheet.create({
   },
   stats: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing[6] },
   stat: { minWidth: 160, gap: spacing[1] },
-  toolbarButtons: { flexDirection: 'row', gap: spacing[2], alignItems: 'center' },
   lineItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: spacing[2],
     gap: spacing[3],
+  },
+  lineRow: {
+    flexDirection: 'row',
+    paddingVertical: spacing[2],
+  },
+  totalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: spacing[3],
+    paddingTop: spacing[3],
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing[2] },
 });

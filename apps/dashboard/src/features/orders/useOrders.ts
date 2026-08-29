@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import {
   useGetOrders,
@@ -21,19 +21,20 @@ import type {
   PostOrders201,
   PostOrdersBody,
 } from '@tableside/api-client';
-import { formatDateTime, getActionLabel, getStatusLabel } from '@tableside/shared';
+import { formatDateTime } from '@tableside/shared';
+import { getActionLabel, getStatusLabel, TERMINAL_STATUSES } from '@tableside/types';
 import { useToast, type TimelineEntry } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useOrdersList() {
-  const router = useRouter();
-  const params = useLocalSearchParams<{ selected?: string; search?: string }>();
+  const params = useLocalSearchParams<{ selected?: string; search?: string; new?: string }>();
   const [filters, setFilters] = useState<GetOrdersParams>({
     page: 1,
     pageSize: 20,
     search: params.search,
   });
   const [selectedOrderId, setSelectedOrderId] = useState<string | undefined>(params.selected);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(params.new === '1');
   const query = useGetOrders(filters);
   const payload = unwrapResponse<GetOrders200>(query.data);
   const exportOrders = () => {
@@ -80,9 +81,17 @@ export function useOrdersList() {
       setFilters((current) => ({ ...current, from, to, page: 1 })),
     setPage: (page: number) => setFilters((current) => ({ ...current, page })),
     selectedOrderId,
-    openOrder: setSelectedOrderId,
+    openOrder: (id: string) => {
+      setIsCreatingOrder(false);
+      setSelectedOrderId(id);
+    },
     closeOrder: () => setSelectedOrderId(undefined),
-    createOrder: () => router.push('/orders/new' as never),
+    isCreatingOrder,
+    createOrder: () => {
+      setSelectedOrderId(undefined);
+      setIsCreatingOrder(true);
+    },
+    closeCreateOrder: () => setIsCreatingOrder(false),
     exportOrders,
     stats: {
       totalOrders: payload?.meta.total ?? 0,
@@ -148,7 +157,7 @@ export function toOrderTimelineEntries(order: GetOrdersId200): TimelineEntry[] {
       tone:
         event.toStatus === 'completed'
           ? ('success' as const)
-          : event.toStatus === 'cancelled' || event.toStatus === 'rejected'
+          : TERMINAL_STATUSES.includes(event.toStatus)
             ? ('error' as const)
             : ('default' as const),
     })),
@@ -156,7 +165,6 @@ export function toOrderTimelineEntries(order: GetOrdersId200): TimelineEntry[] {
 }
 
 export function useCreateOrder() {
-  const router = useRouter();
   const { show } = useToast();
   const createOrder = usePostOrders();
   const customersQuery = useGetCustomers({ page: 1, pageSize: 100 });
@@ -168,15 +176,14 @@ export function useCreateOrder() {
       const result = await createOrder.mutateAsync({ data: payload });
       const created = unwrapResponse<PostOrders201>(result);
       show({ title: 'Order created', variant: 'success' });
-      if (created?.id) {
-        router.replace(`/orders/${created.id}` as never);
-      }
+      return created;
     } catch (error) {
       show({
         title: 'Could not create order',
         description: error instanceof Error ? error.message : 'Unknown error',
         variant: 'error',
       });
+      return undefined;
     }
   };
 
@@ -194,11 +201,6 @@ export function useCreateOrder() {
       void settingsQuery.refetch();
     },
   };
-}
-
-export function useOrderRouteParams() {
-  const params = useLocalSearchParams<{ id: string }>();
-  return params.id;
 }
 
 export type OrderListItem = GetOrders200DataItem;

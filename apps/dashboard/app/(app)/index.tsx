@@ -63,9 +63,8 @@ export default function HomeScreen() {
           </Text>
         </View>
         <View style={styles.actions}>
-          <Button label="New Order" onPress={() => router.push('/orders/new' as never)} />
+          <Button label="New Order" onPress={() => router.push('/orders?new=1' as never)} />
           <Button label="Add Menu Item" variant="secondary" onPress={() => router.push('/menu?new=1' as never)} />
-          <Button label="View Reports" variant="secondary" onPress={() => setRange('30d')} />
         </View>
       </View>
 

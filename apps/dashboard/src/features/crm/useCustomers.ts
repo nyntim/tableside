@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import {
   useGetCustomers,
   useGetCustomersId,
   useGetOrders,
   usePatchCustomersId,
-  usePostCustomers,
 } from '@tableside/api-client';
 import type {
   GetCustomers200,
@@ -13,8 +12,6 @@ import type {
   GetCustomersId200,
   GetCustomersParams,
   GetOrders200,
-  PostCustomersBody,
-  PostCustomers201,
 } from '@tableside/api-client';
 import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
@@ -102,31 +99,6 @@ export function useCustomerDetail(customerId: string) {
     save,
     isSaving: updateCustomer.isPending,
   };
-}
-
-export function useCreateCustomer() {
-  const router = useRouter();
-  const { show } = useToast();
-  const createCustomer = usePostCustomers();
-
-  const submit = async (data: PostCustomersBody) => {
-    try {
-      const result = await createCustomer.mutateAsync({ data });
-      const created = unwrapResponse<PostCustomers201>(result);
-      show({ title: 'Customer created', variant: 'success' });
-      if (created?.id) {
-        router.push(`/crm/${created.id}` as never);
-      }
-    } catch (error) {
-      show({
-        title: 'Could not create customer',
-        description: error instanceof Error ? error.message : 'Unknown error',
-        variant: 'error',
-      });
-    }
-  };
-
-  return { submit, isSubmitting: createCustomer.isPending };
 }
 
 export type CustomerListItem = GetCustomers200DataItem;
