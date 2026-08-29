@@ -926,6 +926,17 @@
                         "type": "string",
                         "nullable": true
                       },
+                      "imageUrl": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri"
+                      },
+                      "dietaryTags": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
                       "priceCents": {
                         "type": "integer",
                         "minimum": -2147483648,
@@ -956,6 +967,8 @@
                       "categoryId",
                       "name",
                       "description",
+                      "imageUrl",
+                      "dietaryTags",
                       "priceCents",
                       "isAvailable",
                       "sortOrder",
@@ -992,6 +1005,20 @@
                     "type": "string",
                     "nullable": true,
                     "maxLength": 500
+                  },
+                  "imageUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uri"
+                  },
+                  "dietaryTags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "maxItems": 12
                   },
                   "priceCents": {
                     "type": "integer",
@@ -1038,6 +1065,17 @@
                       "type": "string",
                       "nullable": true
                     },
+                    "imageUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "dietaryTags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
                     "priceCents": {
                       "type": "integer",
                       "minimum": -2147483648,
@@ -1068,6 +1106,8 @@
                     "categoryId",
                     "name",
                     "description",
+                    "imageUrl",
+                    "dietaryTags",
                     "priceCents",
                     "isAvailable",
                     "sortOrder",
@@ -1297,6 +1337,20 @@
                     "nullable": true,
                     "maxLength": 500
                   },
+                  "imageUrl": {
+                    "type": "string",
+                    "nullable": true,
+                    "format": "uri"
+                  },
+                  "dietaryTags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 40
+                    },
+                    "maxItems": 12
+                  },
                   "priceCents": {
                     "type": "integer",
                     "minimum": 0
@@ -1337,6 +1391,17 @@
                       "type": "string",
                       "nullable": true
                     },
+                    "imageUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "dietaryTags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
                     "priceCents": {
                       "type": "integer",
                       "minimum": -2147483648,
@@ -1367,6 +1432,8 @@
                     "categoryId",
                     "name",
                     "description",
+                    "imageUrl",
+                    "dietaryTags",
                     "priceCents",
                     "isAvailable",
                     "sortOrder",
@@ -1598,6 +1665,17 @@
                       "type": "string",
                       "nullable": true
                     },
+                    "imageUrl": {
+                      "type": "string",
+                      "nullable": true,
+                      "format": "uri"
+                    },
+                    "dietaryTags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
                     "priceCents": {
                       "type": "integer",
                       "minimum": -2147483648,
@@ -1628,6 +1706,8 @@
                     "categoryId",
                     "name",
                     "description",
+                    "imageUrl",
+                    "dietaryTags",
                     "priceCents",
                     "isAvailable",
                     "sortOrder",
@@ -4870,32 +4950,41 @@
                       "maximum": 2147483647
                     },
                     "openingHours": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "nullable": true
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "nullable": true
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "day": {
+                            "type": "string",
+                            "enum": [
+                              "mon",
+                              "tue",
+                              "wed",
+                              "thu",
+                              "fri",
+                              "sat",
+                              "sun"
+                            ]
+                          },
+                          "open": {
+                            "type": "string",
+                            "pattern": "^\\d{2}:\\d{2}$"
+                          },
+                          "close": {
+                            "type": "string",
+                            "pattern": "^\\d{2}:\\d{2}$"
+                          },
+                          "isClosed": {
+                            "type": "boolean"
                           }
                         },
-                        {
-                          "type": "array",
-                          "items": {
-                            "nullable": true
-                          }
-                        }
-                      ]
+                        "required": [
+                          "day",
+                          "open",
+                          "close",
+                          "isClosed"
+                        ]
+                      }
                     },
                     "createdAt": {
                       "type": "string",
@@ -5078,32 +5167,41 @@
                       "maximum": 2147483647
                     },
                     "openingHours": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "nullable": true
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {
-                            "nullable": true
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "day": {
+                            "type": "string",
+                            "enum": [
+                              "mon",
+                              "tue",
+                              "wed",
+                              "thu",
+                              "fri",
+                              "sat",
+                              "sun"
+                            ]
+                          },
+                          "open": {
+                            "type": "string",
+                            "pattern": "^\\d{2}:\\d{2}$"
+                          },
+                          "close": {
+                            "type": "string",
+                            "pattern": "^\\d{2}:\\d{2}$"
+                          },
+                          "isClosed": {
+                            "type": "boolean"
                           }
                         },
-                        {
-                          "type": "array",
-                          "items": {
-                            "nullable": true
-                          }
-                        }
-                      ]
+                        "required": [
+                          "day",
+                          "open",
+                          "close",
+                          "isClosed"
+                        ]
+                      }
                     },
                     "createdAt": {
                       "type": "string",

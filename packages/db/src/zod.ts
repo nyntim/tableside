@@ -19,6 +19,8 @@ export const selectMenuItemSchema = createSelectSchema(menuItems);
 export const insertMenuItemSchema = createInsertSchema(menuItems, {
   name: z.string().min(1).max(160),
   priceCents: z.number().int().min(0),
+  imageUrl: z.string().url().optional().nullable(),
+  dietaryTags: z.array(z.string().min(1).max(40)).max(12).optional(),
 });
 
 export const selectCustomerSchema = createSelectSchema(customers);

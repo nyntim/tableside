@@ -18,6 +18,14 @@ export type PatchMenuItemsIdBody = {
      * @nullable
      */
   description?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
+  /**
+     * @maxItems 12
+     * @items.minLength 1
+     * @items.maxLength 40
+     */
+  dietaryTags?: string[];
   /** @minimum 0 */
   priceCents?: number;
   isAvailable?: boolean;

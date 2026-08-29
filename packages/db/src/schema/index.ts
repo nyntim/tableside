@@ -28,6 +28,8 @@ export const menuItems = pgTable('menu_items', {
     .references(() => menuCategories.id, { onDelete: 'restrict' }),
   name: varchar('name', { length: 160 }).notNull(),
   description: text('description'),
+  imageUrl: text('image_url'),
+  dietaryTags: jsonb('dietary_tags').$type<string[]>().notNull().default(sql`'[]'::jsonb`),
   priceCents: integer('price_cents').notNull(),
   isAvailable: boolean('is_available').notNull().default(true),
   sortOrder: integer('sort_order').notNull().default(0),

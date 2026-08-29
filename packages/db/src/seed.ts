@@ -130,6 +130,9 @@ async function main() {
         categoryId: categoryMap.get(item.category)!,
         name: item.name,
         description: item.description,
+        imageUrl: `https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=640&q=80`,
+        dietaryTags:
+          item.name.includes('Salad') || item.name.includes('Margherita') ? ['vegetarian'] : [],
         priceCents: item.priceCents,
         sortOrder: index,
         isAvailable: item.name !== 'Soup of the Day',

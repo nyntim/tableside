@@ -13,6 +13,9 @@ export type DeleteMenuItemsId200 = {
   name: string;
   /** @nullable */
   description: string | null;
+  /** @nullable */
+  imageUrl: string | null;
+  dietaryTags: string[];
   /**
      * @minimum -2147483648
      * @maximum 2147483647

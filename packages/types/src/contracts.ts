@@ -33,6 +33,8 @@ export const menuCategorySchema = selectMenuCategorySchema.extend({
 
 export const menuItemSchema = selectMenuItemSchema.extend({
   categoryName: z.string().optional(),
+  imageUrl: z.string().url().nullable(),
+  dietaryTags: z.array(z.string()),
 });
 
 export const customerSchema = selectCustomerSchema.extend({
@@ -55,7 +57,9 @@ export const orderDetailSchema = orderSchema.extend({
   timeline: z.array(orderStatusEventSchema),
 });
 
-export const businessSettingsSchema = selectBusinessSettingsSchema;
+export const businessSettingsSchema = selectBusinessSettingsSchema.extend({
+  openingHours: z.array(openingHoursDaySchema),
+});
 
 export const createMenuCategoryBodySchema = z.object({
   name: z.string().min(1).max(120),
@@ -70,6 +74,8 @@ export const createMenuItemBodySchema = z.object({
   categoryId: z.string().uuid(),
   name: z.string().min(1).max(160),
   description: z.string().max(500).optional().nullable(),
+  imageUrl: z.string().url().optional().nullable(),
+  dietaryTags: z.array(z.string().min(1).max(40)).max(12).optional(),
   priceCents: z.number().int().min(0),
   isAvailable: z.boolean().optional(),
   sortOrder: z.number().int().min(0).optional(),

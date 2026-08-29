@@ -5,7 +5,7 @@
  * Restaurant operations API for Tableside
  * OpenAPI spec version: 1.0.0
  */
-import type { GetSettings200OpeningHours } from './getSettings200OpeningHours';
+import type { GetSettings200OpeningHoursItem } from './getSettings200OpeningHoursItem';
 
 export type GetSettings200 = {
   id: string;
@@ -40,7 +40,7 @@ export type GetSettings200 = {
      * @maximum 2147483647
      */
   deliveryFeeCents: number;
-  openingHours: GetSettings200OpeningHours;
+  openingHours: GetSettings200OpeningHoursItem[];
   createdAt: string;
   updatedAt: string;
 };
