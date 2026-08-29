@@ -5,29 +5,28 @@ import {
   Card,
   ErrorState,
   Input,
-  MoneyText,
+  Money,
   Select,
   SkeletonGroup,
   spacing,
   typography,
   useTheme,
 } from '@tableside/ui';
-import {
-  useGetCustomers,
-  useGetMenuItems,
-  useGetSettings,
-} from '@tableside/api-client';
 import { calculateOrderTotals } from '@tableside/shared';
 import { useCreateOrder } from '@/features/orders/useOrders';
-import { unwrapResponse } from '@/lib/api';
-import type { GetCustomers200, GetMenuItems200Item, GetSettings200 } from '@tableside/api-client';
 
 export default function NewOrderScreen() {
   const { colors } = useTheme();
-  const { submit, isSubmitting } = useCreateOrder();
-  const customersQuery = useGetCustomers({ page: 1, pageSize: 100 });
-  const menuQuery = useGetMenuItems();
-  const settingsQuery = useGetSettings();
+  const {
+    submit,
+    isSubmitting,
+    customers,
+    menuItems,
+    settings,
+    isLoading,
+    isError,
+    refetch,
+  } = useCreateOrder();
 
   const [customerId, setCustomerId] = useState('');
   const [fulfillmentType, setFulfillmentType] = useState<'pickup' | 'delivery' | 'dine_in'>('pickup');
@@ -35,23 +34,19 @@ export default function NewOrderScreen() {
   const [quantity, setQuantity] = useState('1');
   const [items, setItems] = useState<Array<{ menuItemId: string; quantity: number; name: string; priceCents: number }>>([]);
 
-  const customersPayload = unwrapResponse<GetCustomers200>(customersQuery.data);
-  const menuItems = unwrapResponse<GetMenuItems200Item[]>(menuQuery.data) ?? [];
-  const settings = unwrapResponse<GetSettings200>(settingsQuery.data);
-
   const customerOptions = useMemo(
     () =>
-      (customersPayload?.data ?? []).map((customer) => ({
+      customers.map((customer) => ({
         label: customer.name,
         value: customer.id,
       })),
-    [customersPayload],
+    [customers],
   );
 
   const menuOptions = useMemo(
     () =>
       menuItems.map((item) => ({
-        label: `${item.name} — $${(item.priceCents / 100).toFixed(2)}`,
+        label: item.name,
         value: item.id,
       })),
     [menuItems],
@@ -80,15 +75,8 @@ export default function NewOrderScreen() {
     setQuantity('1');
   };
 
-  const isLoading = customersQuery.isLoading || menuQuery.isLoading || settingsQuery.isLoading;
-  const isError = customersQuery.isError || menuQuery.isError || settingsQuery.isError;
-
   if (isError) {
-    return <ErrorState onRetry={() => {
-      customersQuery.refetch();
-      menuQuery.refetch();
-      settingsQuery.refetch();
-    }} />;
+    return <ErrorState onRetry={refetch} />;
   }
 
   if (isLoading) {
@@ -130,14 +118,14 @@ export default function NewOrderScreen() {
               <Text style={{ color: colors.text, flex: 1 }}>
                 {item.quantity}× {item.name}
               </Text>
-              <MoneyText cents={item.priceCents * item.quantity} />
+              <Money cents={item.priceCents * item.quantity} size="small" />
             </View>
           ))
         )}
         {totals ? (
           <View style={styles.totalRow}>
             <Text style={[typography.lg, { color: colors.text, fontWeight: '700' }]}>Estimated total</Text>
-            <MoneyText cents={totals.totalCents} emphasize />
+            <Money cents={totals.totalCents} emphasize />
           </View>
         ) : null}
       </Card>

@@ -7,22 +7,22 @@ import {
   ErrorState,
   Input,
   Modal,
-  MoneyText,
+  Money,
   SkeletonGroup,
   StatusBadge,
+  Timeline,
   spacing,
   typography,
   useTheme,
 } from '@tableside/ui';
-import { formatDateTime } from '@tableside/shared';
-import { getFulfillmentLabel } from '@tableside/shared';
+import { getFulfillmentLabel, isDestructiveAction } from '@tableside/shared';
 import { useOrderDetail, useOrderRouteParams } from '@/features/orders/useOrders';
 
 export default function OrderDetailScreen() {
   const router = useRouter();
   const orderId = useOrderRouteParams();
   const { colors } = useTheme();
-  const { order, isLoading, isError, refetch, allowedActions, performTransition, isTransitioning } =
+  const { order, isLoading, isError, refetch, allowedActions, performTransition, isTransitioning, timelineEntries } =
     useOrderDetail(orderId);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [reason, setReason] = useState('');
@@ -55,7 +55,7 @@ export default function OrderDetailScreen() {
           <Button
             key={action}
             label={label}
-            variant={action === 'cancel' || action === 'reject' ? 'danger' : 'primary'}
+            variant={isDestructiveAction(action) ? 'danger' : 'primary'}
             onPress={() => setPendingAction(action)}
           />
         ))}
@@ -66,7 +66,7 @@ export default function OrderDetailScreen() {
         <Text style={{ color: colors.textMuted }}>
           Fulfillment: {getFulfillmentLabel(order.fulfillmentType)}
         </Text>
-        <MoneyText cents={order.totalCents} emphasize style={{ marginTop: spacing[2] }} />
+        <Money cents={order.totalCents} emphasize style={{ marginTop: spacing[2] }} />
       </Card>
 
       <Card title="Items">
@@ -75,22 +75,13 @@ export default function OrderDetailScreen() {
             <Text style={{ color: colors.text, flex: 1 }}>
               {item.quantity}× {item.nameSnapshot}
             </Text>
-            <MoneyText cents={item.lineTotalCents} />
+            <Money cents={item.lineTotalCents} />
           </View>
         ))}
       </Card>
 
       <Card title="Timeline">
-        {order.timeline.map((event) => (
-          <View key={event.id} style={styles.timelineRow}>
-            <Text style={[typography.sm, { color: colors.text, fontWeight: '600' }]}>
-              {event.action ?? 'created'}
-            </Text>
-            <Text style={[typography.xs, { color: colors.textMuted }]}>
-              {formatDateTime(event.createdAt)}
-            </Text>
-          </View>
-        ))}
+        <Timeline entries={timelineEntries} />
       </Card>
 
       <Modal
@@ -144,9 +135,5 @@ const styles = StyleSheet.create({
   itemRow: {
     flexDirection: 'row',
     paddingVertical: spacing[2],
-  },
-  timelineRow: {
-    paddingVertical: spacing[2],
-    gap: spacing[1],
   },
 });

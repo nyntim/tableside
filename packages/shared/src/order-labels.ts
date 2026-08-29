@@ -32,6 +32,10 @@ export function getActionLabel(action: OrderAction): string {
   return labels[action];
 }
 
+export function isDestructiveAction(action: string): boolean {
+  return action === 'cancel' || action === 'reject';
+}
+
 export function getStatusLabel(status: OrderStatus): string {
   const labels: Record<OrderStatus, string> = {
     pending: 'Pending',
