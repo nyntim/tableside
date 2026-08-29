@@ -41,7 +41,7 @@ Terminal states (`completed`, `cancelled`, `rejected`) expose no further actions
 
 ## Design system (`packages/ui`)
 
-Cross-platform primitives built on React Native primitives + `react-native-web`. Semantic theming via `ThemeProvider` with light/dark palettes. Components include layout (Card, Table), forms (Input, Select), feedback (Toast, Skeleton, EmptyState), and domain helpers (`StatusBadge`, `MoneyText`, `StatCard`).
+Cross-platform primitives built on React Native primitives + `react-native-web`. Semantic color tokens via `ThemeProvider`. Components include layout (Card, Table), forms (Input, Select), feedback (Toast, Skeleton, EmptyState), and domain helpers (`StatusBadge`, `MoneyText`, `StatCard`).
 
 ## Contract generation
 

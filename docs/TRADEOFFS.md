@@ -63,3 +63,19 @@
 **Why**: Expo Metro resolves workspace packages reliably with `watchFolders` + `disableHierarchicalLookup`.
 
 **Tradeoff**: Less strict isolation than pnpm's default isolated mode; acceptable for this assignment's package count.
+
+## ESLint coverage
+
+**Choice**: Real ESLint 9 flat config at the repo root, run from `apps/dashboard` and `services/backend` via `pnpm lint`.
+
+**Why**: The assignment asks for a working lint script; other packages are already gated by `typecheck` and tests.
+
+**Tradeoff**: `packages/*` is not linted. Rules are recommended TypeScript + React Hooks, not type-aware (`recommendedTypeChecked`), so lint stays fast in CI.
+
+## Single visual theme
+
+**Choice**: One semantic color set from the design tokens. The previous light/dark toggle was removed because both themes were the same object.
+
+**Why**: A no-op toggle is worse than no toggle. The operator dashboard is specified as a light Mercury-style canvas.
+
+**Tradeoff**: There is no distinct dark mode. Adding one later is a token change, not a second product surface.
