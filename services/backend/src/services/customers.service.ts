@@ -8,11 +8,12 @@ export async function listCustomers(
   params: { page: number; pageSize: number; search?: string },
 ) {
   const offset = (params.page - 1) * params.pageSize;
+  const pattern = `%${params.search}%`;
   const where = params.search
     ? or(
-        ilike(customers.name, `%${params.search}%`),
-        ilike(customers.email, sql`coalesce(${customers.email}, '')`),
-        ilike(customers.phone, sql`coalesce(${customers.phone}, '')`),
+        ilike(customers.name, pattern),
+        ilike(customers.email, pattern),
+        ilike(customers.phone, pattern),
       )
     : undefined;
 
