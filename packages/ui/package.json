@@ -13,7 +13,8 @@
     "test": "echo 'no ui tests yet'"
   },
   "dependencies": {
-    "@tableside/shared": "workspace:*"
+    "@tableside/shared": "workspace:*",
+    "@tableside/types": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18",

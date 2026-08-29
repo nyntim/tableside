@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { radius, spacing, statusColors, typography } from '../theme/tokens';
-import { getStatusLabel } from '@tableside/shared';
+import { getStatusLabel, type OrderStatus } from '@tableside/types/order-state-machine';
 import { useTheme } from '../theme/ThemeProvider';
 
 export type StatusBadgeProps = {
@@ -11,7 +11,7 @@ export type StatusBadgeProps = {
 export function StatusBadge({ status }: StatusBadgeProps) {
   const { colors: themeColors } = useTheme();
   const colors = statusColors[status] ?? { bg: themeColors.surfaceMuted, text: themeColors.textMuted };
-  const label = getStatusLabel(status as Parameters<typeof getStatusLabel>[0]);
+  const label = getStatusLabel(status as OrderStatus);
 
   return (
     <View

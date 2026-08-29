@@ -10,28 +10,8 @@ import {
   type OrderStatus,
 } from './schema/index.js';
 import { createDb } from './client.js';
-function generateOrderNumber(): string {
-  const now = new Date();
-  const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
-  const randomPart = Math.floor(Math.random() * 9000 + 1000);
-  return `ORD-${datePart}-${randomPart}`;
-}
-
-function calculateOrderTotals(input: {
-  subtotalCents: number;
-  taxRateBps: number;
-  serviceFeeBps: number;
-  deliveryFeeCents: number;
-  fulfillmentType: 'pickup' | 'delivery' | 'dine_in';
-}) {
-  const taxCents = Math.round((input.subtotalCents * input.taxRateBps) / 10000);
-  const serviceFeeCents = Math.round((input.subtotalCents * input.serviceFeeBps) / 10000);
-  const deliveryFeeCents =
-    input.fulfillmentType === 'delivery' ? input.deliveryFeeCents : 0;
-  const totalCents =
-    input.subtotalCents + taxCents + serviceFeeCents + deliveryFeeCents;
-  return { taxCents, serviceFeeCents, deliveryFeeCents, totalCents };
-}
+import { generateOrderNumber } from '@tableside/shared';
+import { calculateOrderTotals } from './totals.js';
 
 const connectionString =
   process.env.DATABASE_URL ?? 'postgres://tableside:tableside@localhost:5432/tableside';

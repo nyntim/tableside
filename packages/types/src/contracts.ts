@@ -9,7 +9,7 @@ import {
   selectOrderSchema,
   selectOrderStatusEventSchema,
   updateBusinessSettingsSchema,
-} from '@tableside/db';
+} from '@tableside/db/zod';
 import { FULFILLMENT_TYPES, ORDER_ACTIONS, ORDER_STATUSES } from './order-state-machine';
 
 export const errorResponseSchema = z.object({

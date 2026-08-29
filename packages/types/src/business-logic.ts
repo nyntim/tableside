@@ -1,4 +1,6 @@
-import type { OpeningHoursDay } from '@tableside/db';
+import type { OpeningHoursDay } from '@tableside/db/schema';
+
+export { calculateOrderTotals } from '@tableside/db/totals';
 
 export function isStoreOpen(
   openingHours: OpeningHoursDay[],
@@ -41,19 +43,3 @@ export function isStoreOpen(
   return currentTime >= schedule.open && currentTime <= schedule.close;
 }
 
-export function calculateOrderTotals(input: {
-  subtotalCents: number;
-  taxRateBps: number;
-  serviceFeeBps: number;
-  deliveryFeeCents: number;
-  fulfillmentType: 'pickup' | 'delivery' | 'dine_in';
-}) {
-  const taxCents = Math.round((input.subtotalCents * input.taxRateBps) / 10000);
-  const serviceFeeCents = Math.round((input.subtotalCents * input.serviceFeeBps) / 10000);
-  const deliveryFeeCents =
-    input.fulfillmentType === 'delivery' ? input.deliveryFeeCents : 0;
-  const totalCents =
-    input.subtotalCents + taxCents + serviceFeeCents + deliveryFeeCents;
-
-  return { taxCents, serviceFeeCents, deliveryFeeCents, totalCents };
-}

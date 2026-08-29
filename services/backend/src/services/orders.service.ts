@@ -15,7 +15,7 @@ import {
   isStoreOpen,
   type OrderAction,
 } from '@tableside/types';
-import { and, count, desc, eq, gte, ilike, lte, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gte, ilike, lte } from 'drizzle-orm';
 import {
   invalidTransitionError,
   minOrderError,

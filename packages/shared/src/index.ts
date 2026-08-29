@@ -1,6 +1,4 @@
-export * from './order-labels';
 export * from './theme';
-import type { FulfillmentType } from './order-labels';
 
 export function formatMoney(cents: number, currency = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
@@ -50,21 +48,4 @@ export function generateOrderNumber(): string {
   const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
   const randomPart = Math.floor(Math.random() * 9000 + 1000);
   return `ORD-${datePart}-${randomPart}`;
-}
-
-export function calculateOrderTotals(input: {
-  subtotalCents: number;
-  taxRateBps: number;
-  serviceFeeBps: number;
-  deliveryFeeCents: number;
-  fulfillmentType: FulfillmentType;
-}) {
-  const taxCents = Math.round((input.subtotalCents * input.taxRateBps) / 10000);
-  const serviceFeeCents = Math.round((input.subtotalCents * input.serviceFeeBps) / 10000);
-  const deliveryFeeCents =
-    input.fulfillmentType === 'delivery' ? input.deliveryFeeCents : 0;
-  const totalCents =
-    input.subtotalCents + taxCents + serviceFeeCents + deliveryFeeCents;
-
-  return { taxCents, serviceFeeCents, deliveryFeeCents, totalCents };
 }

@@ -5,15 +5,13 @@ import {
   type FulfillmentType,
   type OrderAction,
   type OrderStatus,
-} from '@tableside/db';
+} from '@tableside/db/schema';
 
 export const ORDER_STATUSES = orderStatusEnum.enumValues;
 export const FULFILLMENT_TYPES = fulfillmentTypeEnum.enumValues;
 export const ORDER_ACTIONS = orderActionEnum.enumValues;
 
 export type { FulfillmentType, OrderAction, OrderStatus };
-
-const TERMINAL_STATUSES: OrderStatus[] = ['completed', 'cancelled', 'rejected'];
 
 const TRANSITIONS: Record<
   OrderStatus,
@@ -43,6 +41,14 @@ const TRANSITIONS: Record<
   cancelled: {},
   rejected: {},
 };
+
+export const TERMINAL_STATUSES = ORDER_STATUSES.filter(
+  (status) => Object.keys(TRANSITIONS[status]).length === 0,
+);
+
+export const OPEN_ORDER_STATUSES = ORDER_STATUSES.filter(
+  (status) => !TERMINAL_STATUSES.includes(status),
+);
 
 export function getNextStatus(
   current: OrderStatus,
@@ -75,8 +81,12 @@ export function getAllowedActions(
   });
 }
 
-export function actionRequiresReason(action: OrderAction): boolean {
+export function isDestructiveAction(action: OrderAction | string): boolean {
   return action === 'cancel' || action === 'reject';
+}
+
+export function actionRequiresReason(action: OrderAction): boolean {
+  return isDestructiveAction(action);
 }
 
 export function getStatusTimestampField(

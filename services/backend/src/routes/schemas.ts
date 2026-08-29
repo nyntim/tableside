@@ -13,7 +13,6 @@ import {
   metricsQuerySchema,
   metricsSummarySchema,
   orderDetailSchema,
-  orderSchema,
   ordersQuerySchema,
   paginatedCustomersSchema,
   paginatedOrdersSchema,

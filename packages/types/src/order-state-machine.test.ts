@@ -4,6 +4,7 @@ import {
   getAllowedActions,
   getNextStatus,
   getStatusLabel,
+  isDestructiveAction,
 } from './order-state-machine';
 
 describe('order state machine', () => {
@@ -39,5 +40,11 @@ describe('order state machine', () => {
 
   it('provides human-readable labels', () => {
     expect(getStatusLabel('out_for_delivery')).toBe('Out for delivery');
+  });
+
+  it('treats cancel and reject as destructive', () => {
+    expect(isDestructiveAction('cancel')).toBe(true);
+    expect(isDestructiveAction('reject')).toBe(true);
+    expect(isDestructiveAction('confirm')).toBe(false);
   });
 });
