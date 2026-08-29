@@ -1,27 +1,14 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
-import { darkTheme, lightTheme, type SemanticColors, type ThemeMode } from './tokens';
+import React, { createContext, useContext, useMemo } from 'react';
+import { lightTheme, type SemanticColors } from './tokens';
 
 type ThemeContextValue = {
-  mode: ThemeMode;
   colors: SemanticColors;
-  setMode: (mode: ThemeMode) => void;
-  toggleMode: () => void;
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<ThemeMode>('dark');
-
-  const value = useMemo(
-    () => ({
-      mode,
-      colors: mode === 'dark' ? darkTheme : lightTheme,
-      setMode,
-      toggleMode: () => setMode((current) => (current === 'dark' ? 'light' : 'dark')),
-    }),
-    [mode],
-  );
+  const value = useMemo(() => ({ colors: lightTheme }), []);
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

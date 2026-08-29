@@ -45,8 +45,6 @@ export const breakpoints = {
   lg: sharedBreakpoints.wide,
 } as const;
 
-export type ThemeMode = 'light' | 'dark';
-
 export type SemanticColors = {
   background: string;
   surface: string;
@@ -82,8 +80,6 @@ export const lightTheme: SemanticColors = {
   error: colors.error,
   info: colors.accent,
 };
-
-export const darkTheme: SemanticColors = lightTheme;
 
 export const statusColors: Record<string, { bg: string; text: string }> = {
   pending: { bg: colors.surface, text: colors.warning },

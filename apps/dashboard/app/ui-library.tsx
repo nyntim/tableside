@@ -12,7 +12,6 @@ import {
   Modal,
   Money,
   Select,
-  Skeleton,
   SkeletonGroup,
   StatCard,
   StatusBadge,
@@ -28,7 +27,7 @@ import {
 
 export default function UiLibraryScreen() {
   const router = useRouter();
-  const { colors, toggleMode, mode } = useTheme();
+  const { colors } = useTheme();
   const { show } = useToast();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -42,11 +41,10 @@ export default function UiLibraryScreen() {
       </View>
 
       <Text style={[typography.sm, { color: colors.textMuted }]}>
-        Design system primitives from @tableside/ui — theme mode: {mode}
+        Design system primitives from @tableside/ui
       </Text>
-      <Button label="Toggle theme" variant="secondary" onPress={toggleMode} />
 
-      <Card title="Tokens" subtitle="Shared from @tableside/shared and consumed by NativeWind">
+      <Card title="Tokens" subtitle="Shared from @tableside/shared and consumed by ThemeProvider">
         <View style={styles.row}>
           {Object.entries(palette)
             .filter(([, value]) => typeof value === 'string' && value.startsWith('#'))

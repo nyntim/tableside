@@ -1,10 +1,9 @@
 import { usePathname, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Nav, radius, spacing, typography, useResponsive, useTheme } from '@tableside/ui';
+import { Nav, spacing, typography, useResponsive, useTheme } from '@tableside/ui';
 import { Slot } from 'expo-router';
-import { CommandPalette } from '@/components/CommandPalette';
 
 const NAV_ITEMS = [
   { key: 'home', label: 'Home', icon: '🏠', href: '/' },
@@ -18,8 +17,6 @@ const SETTINGS_ITEMS = [
   { key: 'profile', label: 'Restaurant Profile', icon: '•', href: '/settings' },
   { key: 'ordering', label: 'Ordering', icon: '•', href: '/settings' },
   { key: 'hours', label: 'Hours', icon: '•', href: '/settings' },
-  { key: 'team', label: 'Team & Roles', icon: '•', href: '/settings' },
-  { key: 'notifications', label: 'Notifications', icon: '•', href: '/settings' },
 ];
 
 export default function AppLayout() {
@@ -27,7 +24,6 @@ export default function AppLayout() {
   const pathname = usePathname();
   const { colors } = useTheme();
   const { isDesktop } = useResponsive();
-  const [paletteOpen, setPaletteOpen] = useState(false);
   const inSettings = pathname.startsWith('/settings');
 
   const navItems = (inSettings ? SETTINGS_ITEMS : NAV_ITEMS).map((item) => ({
@@ -84,18 +80,6 @@ export default function AppLayout() {
         ) : null}
         <View style={styles.main}>
           <View style={[styles.topbar, { borderBottomColor: colors.border }]}>
-            <Pressable
-              onPress={() => setPaletteOpen(true)}
-              style={[styles.search, { backgroundColor: colors.surface, borderColor: colors.border }]}
-            >
-              <Text style={[typography.sm, { color: colors.textMuted }]}>
-                ⌕ Search anything…
-              </Text>
-              <Text style={[typography.xs, { color: colors.textMuted }]}>Ctrl K</Text>
-            </Pressable>
-            <Pressable accessibilityLabel="Notifications">
-              <Text style={[typography.lg, { color: colors.text }]}>♢</Text>
-            </Pressable>
             <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
               <Text style={[typography.xs, { color: colors.primaryText, fontWeight: '700' }]}>TK</Text>
             </View>
@@ -106,7 +90,6 @@ export default function AppLayout() {
         </View>
         {!isDesktop ? <Nav items={navItems} /> : null}
       </View>
-      <CommandPalette visible={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </SafeAreaView>
   );
 }
@@ -131,17 +114,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     gap: spacing[3],
     borderBottomWidth: 1,
-  },
-  search: {
-    width: 320,
-    maxWidth: '65%',
-    minHeight: 36,
-    borderWidth: 1,
-    borderRadius: radius.full,
-    paddingHorizontal: spacing[3],
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
   },
   avatar: {
     width: 32,
