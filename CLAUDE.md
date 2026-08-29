@@ -4,6 +4,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Git commits
 
+Commit regularly as work lands — small, focused commits rather than large uncommitted batches.
+
+Push only to `main`. Do not create feature branches or push to any other branch.
+
 When creating git commits, do not add "Co-Authored-By: Claude", "Generated with Claude Code", or any similar attribution. Write commit messages as if authored solely by the user.
 
 Never name branches using "claude", "cursor", or any other AI-tool attribution (e.g. no `claude/*` or `cursor/*` prefixes).

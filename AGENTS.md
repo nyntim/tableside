@@ -4,6 +4,10 @@ This file provides guidance to AI coding agents (Cursor, Copilot, Codex, etc.) w
 
 ## Git commits
 
+Commit regularly as work lands — small, focused commits rather than large uncommitted batches.
+
+Push only to `main`. Do not create feature branches or push to any other branch.
+
 When creating git commits, do not add "Co-Authored-By", "Generated with [tool]", or any similar AI-tool attribution. Write commit messages as if authored solely by the user.
 
 Never name branches using "claude", "cursor", or any other AI-tool attribution (e.g. no `claude/*` or `cursor/*` prefixes).
