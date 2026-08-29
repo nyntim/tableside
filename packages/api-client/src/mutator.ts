@@ -29,7 +29,11 @@ function buildUrl(path: string, params?: FetchConfig['params']) {
   return url.toString();
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request<T>(
+  path: string,
+  init?: RequestInit,
+  includeResponseMetadata = false,
+): Promise<T> {
   const response = await fetch(buildUrl(path), {
     ...init,
     headers: {
@@ -54,16 +58,22 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     );
   }
 
-  if (response.status === 204) {
-    return undefined as T;
+  const data = response.status === 204 ? undefined : await response.json();
+
+  if (includeResponseMetadata) {
+    return {
+      data,
+      status: response.status,
+      headers: response.headers,
+    } as T;
   }
 
-  return response.json() as Promise<T>;
+  return data as T;
 }
 
 /** Orval mutator entrypoint (url + RequestInit). */
 export async function customFetch<T>(url: string, init?: RequestInit): Promise<T> {
-  return request<T>(url, init);
+  return request<T>(url, init, true);
 }
 
 /** Legacy config-style helper for manual calls. */
