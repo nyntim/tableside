@@ -10,7 +10,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web --port 8791",
     "typecheck": "tsc --noEmit",
-    "lint": "echo 'lint dashboard'",
+    "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
@@ -24,7 +24,6 @@
     "expo-linking": "~57.0.8",
     "expo-router": "~57.0.17",
     "expo-status-bar": "~57.0.1",
-    "nativewind": "^4.2.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-native": "0.81.4",
@@ -41,7 +40,7 @@
     "jest-expo": "~57.0.0",
     "msw": "^2.10.2",
     "react-test-renderer": "19.1.0",
-    "tailwindcss": "^3.4.17",
+    "eslint": "^9.28.0",
     "typescript": "^5.8.3"
   }
 }

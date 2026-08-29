@@ -12,7 +12,7 @@ export class ApiRequestError extends Error {
   }
 }
 
-export type FetchConfig = RequestInit & {
+type FetchConfig = RequestInit & {
   params?: Record<string, string | number | boolean | undefined | null>;
   url: string;
 };
@@ -74,17 +74,6 @@ async function request<T>(
 /** Orval mutator entrypoint (url + RequestInit). */
 export async function customFetch<T>(url: string, init?: RequestInit): Promise<T> {
   return request<T>(url, init, true);
-}
-
-/** Legacy config-style helper for manual calls. */
-export async function fetchApi<T>(config: FetchConfig): Promise<T> {
-  const { url, params, headers, body, ...rest } = config;
-  const builtUrl = buildUrl(url, params);
-  return request<T>(builtUrl.replace(API_BASE_URL, ''), {
-    ...rest,
-    headers,
-    body: body ?? undefined,
-  });
 }
 
 export { API_BASE_URL };

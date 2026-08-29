@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wrangler dev --port 8799",
     "typecheck": "tsc --noEmit",
-    "lint": "echo 'lint backend'",
+    "lint": "eslint .",
     "test": "vitest run --config vitest.config.ts && vitest run --config vitest.smoke.config.ts",
     "gen:openapi": "tsx scripts/generate-openapi.ts"
   },
@@ -26,6 +26,7 @@
     "@cloudflare/workers-types": "^4.20250827.0",
     "@electric-sql/pglite": "^0.5.8",
     "@tableside/tsconfig": "workspace:*",
+    "eslint": "^9.28.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "vitest": "^4.1.11",
