@@ -10,7 +10,38 @@ import {
   typography,
   useTheme,
 } from '@tableside/ui';
+import type { GetSettings200, PatchSettingsBody } from '@tableside/api-client';
 import { useSettingsForm } from '@/features/settings/useSettingsForm';
+
+const WEEK_DAYS = [
+  { day: 'mon', label: 'Monday' },
+  { day: 'tue', label: 'Tuesday' },
+  { day: 'wed', label: 'Wednesday' },
+  { day: 'thu', label: 'Thursday' },
+  { day: 'fri', label: 'Friday' },
+  { day: 'sat', label: 'Saturday' },
+  { day: 'sun', label: 'Sunday' },
+] as const;
+
+type OpeningHour = NonNullable<PatchSettingsBody['openingHours']>[number];
+
+function normalizeHours(hours?: GetSettings200['openingHours']): OpeningHour[] {
+  return WEEK_DAYS.map(({ day }) => {
+    const existing = hours?.find((entry) => entry.day === day);
+    return {
+      day,
+      open: existing?.open ?? '11:00',
+      close: existing?.close ?? '22:00',
+      isClosed: existing?.isClosed ?? false,
+    };
+  });
+}
+
+function hoursSummary(hours: OpeningHour[]) {
+  const openDays = hours.filter((entry) => !entry.isClosed);
+  if (openDays.length === 0) return 'Closed all week';
+  return `${openDays.length} open day${openDays.length === 1 ? '' : 's'}`;
+}
 
 export default function SettingsScreen() {
   const { colors } = useTheme();
@@ -24,6 +55,7 @@ export default function SettingsScreen() {
   const [prepTimeMinutes, setPrepTimeMinutes] = useState('');
   const [minOrderCents, setMinOrderCents] = useState('');
   const [autoAcceptOrders, setAutoAcceptOrders] = useState(false);
+  const [openingHours, setOpeningHours] = useState<OpeningHour[]>(normalizeHours());
   const [editing, setEditing] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,8 +69,15 @@ export default function SettingsScreen() {
       setPrepTimeMinutes(String(settings.prepTimeMinutes));
       setMinOrderCents(String(settings.minOrderCents));
       setAutoAcceptOrders(settings.autoAcceptOrders);
+      setOpeningHours(normalizeHours(settings.openingHours));
     }
   }, [settings]);
+
+  const updateHour = (day: OpeningHour['day'], patch: Partial<OpeningHour>) => {
+    setOpeningHours((current) =>
+      current.map((entry) => (entry.day === day ? { ...entry, ...patch } : entry)),
+    );
+  };
 
   if (isError) {
     return <ErrorState onRetry={refetch} message="Settings could not be loaded." />;
@@ -56,7 +95,6 @@ export default function SettingsScreen() {
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={styles.content}>
       <Text style={[typography['3xl'], { color: colors.text }]}>Settings</Text>
       <Text style={[typography.sm, { color: colors.textMuted }]}>Business configuration and operations</Text>
-      {isError ? <ErrorState onRetry={refetch} message="Settings could not be loaded." /> : null}
 
       <SettingsSection label="Restaurant Profile">
         <SettingRow label="Restaurant name" onEdit={() => setEditing('name')}>
@@ -92,15 +130,47 @@ export default function SettingsScreen() {
       </SettingsSection>
 
       <SettingsSection label="Hours">
-        <SettingRow label="Weekly schedule" onEdit={() => setEditing('hours')}>
-          <Value text={settings.openingHours?.length ? `${settings.openingHours.length} days configured` : 'Not configured'} />
+        <SettingRow label="Weekly schedule" onEdit={() => setEditing((current) => (current === 'hours' ? null : 'hours'))}>
+          <Value text={hoursSummary(openingHours)} />
         </SettingRow>
-      </SettingsSection>
-      <SettingsSection label="Team & Roles">
-        <SettingRow label="Team management"><Value text="Not configured in this workspace" muted /></SettingRow>
-      </SettingsSection>
-      <SettingsSection label="Notifications">
-        <SettingRow label="Notification preferences"><Value text="Not configured in this workspace" muted /></SettingRow>
+        {editing === 'hours'
+          ? WEEK_DAYS.map(({ day, label }) => {
+              const entry = openingHours.find((hour) => hour.day === day)!;
+              return (
+                <View key={day} style={[styles.hourRow, { borderBottomColor: colors.border }]}>
+                  <Text style={[typography.sm, { color: colors.text, width: 110 }]}>{label}</Text>
+                  <View style={styles.hourControls}>
+                    <View style={styles.closedToggle}>
+                      <Text style={[typography.xs, { color: colors.textMuted }]}>Closed</Text>
+                      <Switch
+                        value={entry.isClosed}
+                        onValueChange={(isClosed) => updateHour(day, { isClosed })}
+                        trackColor={{ false: colors.border, true: colors.warning }}
+                      />
+                    </View>
+                    <Input
+                      label="Open"
+                      value={entry.open}
+                      onChangeText={(open) => updateHour(day, { open })}
+                      editable={!entry.isClosed}
+                      placeholder="11:00"
+                      hint="HH:MM"
+                      containerStyle={styles.timeInput}
+                    />
+                    <Input
+                      label="Close"
+                      value={entry.close}
+                      onChangeText={(close) => updateHour(day, { close })}
+                      editable={!entry.isClosed}
+                      placeholder="22:00"
+                      hint="HH:MM"
+                      containerStyle={styles.timeInput}
+                    />
+                  </View>
+                </View>
+              );
+            })
+          : null}
       </SettingsSection>
 
       <Button
@@ -117,7 +187,8 @@ export default function SettingsScreen() {
             prepTimeMinutes: Number(prepTimeMinutes),
             minOrderCents: Number(minOrderCents),
             autoAcceptOrders,
-          } as Parameters<typeof save>[0])
+            openingHours,
+          })
         }
       />
     </ScrollView>
@@ -177,4 +248,22 @@ const styles = StyleSheet.create({
   },
   settingValue: { minWidth: 220, alignItems: 'flex-end' },
   sectionLabel: { letterSpacing: 1, marginTop: spacing[4], marginBottom: spacing[1] },
+  hourRow: {
+    paddingVertical: spacing[3],
+    borderBottomWidth: 1,
+    gap: spacing[2],
+  },
+  hourControls: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-end',
+    gap: spacing[3],
+  },
+  closedToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing[2],
+    minHeight: 44,
+  },
+  timeInput: { width: 120 },
 });
