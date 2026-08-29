@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import {
   Button,
-  Card,
   ErrorState,
   Input,
+  Money,
   SkeletonGroup,
   spacing,
   typography,
@@ -21,6 +21,10 @@ export default function SettingsScreen() {
   const [serviceFeeBps, setServiceFeeBps] = useState('');
   const [deliveryFeeCents, setDeliveryFeeCents] = useState('');
   const [acceptingOrders, setAcceptingOrders] = useState(true);
+  const [prepTimeMinutes, setPrepTimeMinutes] = useState('');
+  const [minOrderCents, setMinOrderCents] = useState('');
+  const [autoAcceptOrders, setAutoAcceptOrders] = useState(false);
+  const [editing, setEditing] = useState<string | null>(null);
 
   useEffect(() => {
     if (settings) {
@@ -30,11 +34,14 @@ export default function SettingsScreen() {
       setServiceFeeBps(String(settings.serviceFeeBps));
       setDeliveryFeeCents(String(settings.deliveryFeeCents));
       setAcceptingOrders(settings.acceptingOrders);
+      setPrepTimeMinutes(String(settings.prepTimeMinutes));
+      setMinOrderCents(String(settings.minOrderCents));
+      setAutoAcceptOrders(settings.autoAcceptOrders);
     }
   }, [settings]);
 
   if (isError) {
-    return <ErrorState onRetry={() => refetch()} />;
+    return <ErrorState onRetry={refetch} message="Settings could not be loaded." />;
   }
 
   if (isLoading || !settings) {
@@ -47,23 +54,54 @@ export default function SettingsScreen() {
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: colors.background }} contentContainerStyle={styles.content}>
-      <Text style={[typography['2xl'], { color: colors.text, fontWeight: '700' }]}>Settings</Text>
-      <Text style={[typography.sm, { color: colors.textMuted }]}>Business configuration and fees</Text>
+      <Text style={[typography['3xl'], { color: colors.text }]}>Settings</Text>
+      <Text style={[typography.sm, { color: colors.textMuted }]}>Business configuration and operations</Text>
+      {isError ? <ErrorState onRetry={refetch} message="Settings could not be loaded." /> : null}
 
-      <Card title="Business">
-        <Input label="Restaurant name" value={restaurantName} onChangeText={setRestaurantName} />
-        <Input label="Timezone" value={timezone} onChangeText={setTimezone} />
-        <View style={styles.switchRow}>
-          <Text style={[typography.sm, { color: colors.text }]}>Accepting orders</Text>
-          <Switch value={acceptingOrders} onValueChange={setAcceptingOrders} />
-        </View>
-      </Card>
+      <SettingsSection label="Restaurant Profile">
+        <SettingRow label="Restaurant name" onEdit={() => setEditing('name')}>
+          {editing === 'name' ? <Input value={restaurantName} onChangeText={setRestaurantName} /> : <Value text={restaurantName} />}
+        </SettingRow>
+        <SettingRow label="Timezone" onEdit={() => setEditing('timezone')}>
+          {editing === 'timezone' ? <Input value={timezone} onChangeText={setTimezone} /> : <Value text={timezone} />}
+        </SettingRow>
+      </SettingsSection>
 
-      <Card title="Fees & tax">
-        <Input label="Tax rate (basis points)" value={taxRateBps} onChangeText={setTaxRateBps} keyboardType="number-pad" />
-        <Input label="Service fee (basis points)" value={serviceFeeBps} onChangeText={setServiceFeeBps} keyboardType="number-pad" />
-        <Input label="Delivery fee (cents)" value={deliveryFeeCents} onChangeText={setDeliveryFeeCents} keyboardType="number-pad" />
-      </Card>
+      <SettingsSection label="Ordering">
+        <SettingRow label="Preparation time" onEdit={() => setEditing('prep')}>
+          {editing === 'prep' ? <Input value={prepTimeMinutes} onChangeText={setPrepTimeMinutes} keyboardType="number-pad" /> : <Value text={`${prepTimeMinutes} minutes`} />}
+        </SettingRow>
+        <SettingRow label="Auto-accept orders">
+          <Switch value={autoAcceptOrders} onValueChange={setAutoAcceptOrders} trackColor={{ false: colors.border, true: colors.success }} />
+        </SettingRow>
+        <SettingRow label="Service availability">
+          <Switch value={acceptingOrders} onValueChange={setAcceptingOrders} trackColor={{ false: colors.border, true: colors.success }} />
+        </SettingRow>
+        <SettingRow label="Minimum order" onEdit={() => setEditing('minimum')}>
+          {editing === 'minimum' ? <Input value={minOrderCents} onChangeText={setMinOrderCents} keyboardType="number-pad" hint="Value in cents" /> : <Money cents={Number(minOrderCents)} size="small" />}
+        </SettingRow>
+        <SettingRow label="Delivery fee" onEdit={() => setEditing('delivery')}>
+          {editing === 'delivery' ? <Input value={deliveryFeeCents} onChangeText={setDeliveryFeeCents} keyboardType="number-pad" hint="Value in cents" /> : <Money cents={Number(deliveryFeeCents)} size="small" />}
+        </SettingRow>
+        <SettingRow label="Tax rate" onEdit={() => setEditing('tax')}>
+          {editing === 'tax' ? <Input value={taxRateBps} onChangeText={setTaxRateBps} keyboardType="number-pad" /> : <Value text={`${Number(taxRateBps) / 100}%`} />}
+        </SettingRow>
+        <SettingRow label="Service fee" onEdit={() => setEditing('serviceFee')}>
+          {editing === 'serviceFee' ? <Input value={serviceFeeBps} onChangeText={setServiceFeeBps} keyboardType="number-pad" /> : <Value text={`${Number(serviceFeeBps) / 100}%`} />}
+        </SettingRow>
+      </SettingsSection>
+
+      <SettingsSection label="Hours">
+        <SettingRow label="Weekly schedule" onEdit={() => setEditing('hours')}>
+          <Value text={settings.openingHours?.length ? `${settings.openingHours.length} days configured` : 'Not configured'} />
+        </SettingRow>
+      </SettingsSection>
+      <SettingsSection label="Team & Roles">
+        <SettingRow label="Team management"><Value text="Not configured in this workspace" muted /></SettingRow>
+      </SettingsSection>
+      <SettingsSection label="Notifications">
+        <SettingRow label="Notification preferences"><Value text="Not configured in this workspace" muted /></SettingRow>
+      </SettingsSection>
 
       <Button
         label="Save settings"
@@ -76,6 +114,9 @@ export default function SettingsScreen() {
             serviceFeeBps: Number(serviceFeeBps),
             deliveryFeeCents: Number(deliveryFeeCents),
             acceptingOrders,
+            prepTimeMinutes: Number(prepTimeMinutes),
+            minOrderCents: Number(minOrderCents),
+            autoAcceptOrders,
           } as Parameters<typeof save>[0])
         }
       />
@@ -83,15 +124,57 @@ export default function SettingsScreen() {
   );
 }
 
+function SettingsSection({ label, children }: { label: string; children: React.ReactNode }) {
+  const { colors } = useTheme();
+  return (
+    <View>
+      <Text style={[typography.xs, styles.sectionLabel, { color: colors.textMuted }]}>{label.toUpperCase()}</Text>
+      {children}
+    </View>
+  );
+}
+
+function SettingRow({
+  label,
+  children,
+  onEdit,
+}: {
+  label: string;
+  children: React.ReactNode;
+  onEdit?: () => void;
+}) {
+  const { colors } = useTheme();
+  return (
+    <View style={[styles.settingRow, { borderBottomColor: colors.border }]}>
+      <Text style={[typography.sm, { color: colors.textMuted, flex: 1 }]}>{label}</Text>
+      <View style={styles.settingValue}>{children}</View>
+      {onEdit ? (
+        <Pressable onPress={onEdit}>
+          <Text style={[typography.sm, { color: colors.primary }]}>Edit</Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+}
+
+function Value({ text, muted }: { text: string; muted?: boolean }) {
+  const { colors } = useTheme();
+  return <Text style={[typography.sm, { color: muted ? colors.textMuted : colors.text }]}>{text}</Text>;
+}
+
 const styles = StyleSheet.create({
   content: {
     padding: spacing[6],
     gap: spacing[4],
   },
-  switchRow: {
+  settingRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: spacing[2],
+    minHeight: 60,
+    borderBottomWidth: 1,
+    gap: spacing[4],
   },
+  settingValue: { minWidth: 220, alignItems: 'flex-end' },
+  sectionLabel: { letterSpacing: 1, marginTop: spacing[4], marginBottom: spacing[1] },
 });
