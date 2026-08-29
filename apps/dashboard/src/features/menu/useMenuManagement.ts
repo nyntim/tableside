@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 import {
   useDeleteMenuCategoriesId,
   useDeleteMenuItemsId,
@@ -14,9 +15,12 @@ import { useToast } from '@tableside/ui';
 import { unwrapResponse } from '@/lib/api';
 
 export function useMenuManagement() {
+  const params = useLocalSearchParams<{ selected?: string; new?: string }>();
   const { show } = useToast();
   const categoriesQuery = useGetMenuCategories();
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>();
+  const [editorItemId, setEditorItemId] = useState<string | undefined>(params.selected);
+  const [isCreatingItem, setIsCreatingItem] = useState(params.new === '1');
   const itemsQuery = useGetMenuItems(
     selectedCategoryId ? { categoryId: selectedCategoryId } : undefined,
   );
@@ -57,6 +61,20 @@ export function useMenuManagement() {
     categoryOptions,
     selectedCategoryId,
     setSelectedCategoryId,
+    editorItem: items.find((item) => item.id === editorItemId),
+    isCreatingItem,
+    openItem: (id: string) => {
+      setEditorItemId(id);
+      setIsCreatingItem(false);
+    },
+    openNewItem: () => {
+      setEditorItemId(undefined);
+      setIsCreatingItem(true);
+    },
+    closeEditor: () => {
+      setEditorItemId(undefined);
+      setIsCreatingItem(false);
+    },
     isLoading: categoriesQuery.isLoading || itemsQuery.isLoading,
     isError: categoriesQuery.isError || itemsQuery.isError,
     refetch: () => {
@@ -74,10 +92,21 @@ export function useMenuManagement() {
       name: string;
       priceCents: number;
       description?: string | null;
+      imageUrl?: string | null;
+      dietaryTags?: string[];
+      isAvailable?: boolean;
     }) => wrap(() => createItem.mutateAsync({ data }), 'Item created'),
     updateItem: (
       id: string,
-      data: { name?: string; priceCents?: number; isAvailable?: boolean; description?: string | null },
+      data: {
+        categoryId?: string;
+        name?: string;
+        priceCents?: number;
+        isAvailable?: boolean;
+        description?: string | null;
+        imageUrl?: string | null;
+        dietaryTags?: string[];
+      },
     ) => wrap(() => updateItem.mutateAsync({ id, data }), 'Item updated'),
     deleteItem: (id: string) => wrap(() => deleteItem.mutateAsync({ id }), 'Item deleted'),
   };
