@@ -1,4 +1,5 @@
 export * from './order-labels';
+export * from './theme';
 import type { FulfillmentType } from './order-labels';
 
 export function formatMoney(cents: number, currency = 'USD'): string {

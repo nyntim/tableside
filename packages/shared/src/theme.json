@@ -1,0 +1,48 @@
+{
+  "colors": {
+    "sidebar": "#0E0F13",
+    "canvas": "#14161B",
+    "surface": "#1B1E25",
+    "surfaceHover": "#22252D",
+    "textPrimary": "#F5F5F7",
+    "textSecondary": "#8B8F98",
+    "hairline": "#2A2D35",
+    "accent": "#E8703A",
+    "accentHover": "#F07F49",
+    "accentPressed": "#CF5E2C",
+    "success": "#3FB27F",
+    "warning": "#E0A030",
+    "error": "#E5484D",
+    "errorMuted": "#351D22",
+    "overlay": "rgba(5, 6, 8, 0.72)",
+    "transparent": "transparent"
+  },
+  "spacing": {
+    "0": 0,
+    "1": 4,
+    "2": 8,
+    "3": 12,
+    "4": 16,
+    "6": 24,
+    "8": 32,
+    "12": 48
+  },
+  "radii": {
+    "control": 8,
+    "card": 8,
+    "pill": 999
+  },
+  "fontSize": {
+    "metadata": [12, 16],
+    "body": [14, 20],
+    "section": [18, 24],
+    "money": [20, 24],
+    "title": [28, 34],
+    "moneyLarge": [32, 36]
+  },
+  "breakpoints": {
+    "mobile": 640,
+    "desktop": 960,
+    "wide": 1200
+  }
+}

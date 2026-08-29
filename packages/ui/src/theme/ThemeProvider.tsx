@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useColorScheme } from 'react-native';
 import { darkTheme, lightTheme, type SemanticColors, type ThemeMode } from './tokens';
 
 type ThemeContextValue = {
@@ -12,8 +11,7 @@ type ThemeContextValue = {
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const systemScheme = useColorScheme();
-  const [mode, setMode] = useState<ThemeMode>(systemScheme === 'dark' ? 'dark' : 'light');
+  const [mode, setMode] = useState<ThemeMode>('dark');
 
   const value = useMemo(
     () => ({
